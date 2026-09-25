@@ -2,344 +2,531 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>GameHub</title>
 
 <style>
-* {
-  box-sizing: border-box;
+*{box-sizing:border-box}
+
+:root{
+  --bg:#070a14;
+  --panel:#11182c;
+  --panel2:#18213a;
+  --text:#fff;
+  --muted:#9ca8c7;
+  --purple:#795cff;
+  --blue:#00d5ff;
 }
 
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  color: white;
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:Arial,Helvetica,sans-serif;
+  color:white;
   background:
-    radial-gradient(circle at top left, #293b9b, transparent 35%),
-    radial-gradient(circle at bottom right, #7b21a8, transparent 35%),
-    #080b18;
-  min-height: 100vh;
+    radial-gradient(circle at 15% 0%,#27346c 0,transparent 32%),
+    radial-gradient(circle at 90% 5%,#3a205e 0,transparent 28%),
+    var(--bg);
 }
 
-button,
-input {
-  font: inherit;
+button,input{font:inherit}
+
+header{
+  position:sticky;
+  top:0;
+  z-index:20;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:18px 5%;
+  background:rgba(7,10,20,.82);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(255,255,255,.08);
 }
 
-button {
-  cursor: pointer;
+.logo{
+  font-size:28px;
+  font-weight:1000;
 }
 
-.header {
-  padding: 35px 20px;
-  text-align: center;
+.logo span{
+  color:var(--blue);
 }
 
-.logo {
-  font-size: 48px;
-  font-weight: 900;
-  margin-bottom: 8px;
+.musicBtn,
+.closeBtn,
+.fullBtn{
+  border:1px solid #344263;
+  background:#151e36;
+  color:white;
+  border-radius:13px;
+  padding:10px 15px;
+  cursor:pointer;
 }
 
-.subtitle {
-  color: #b8c1df;
-  font-size: 17px;
+.hero{
+  text-align:center;
+  padding:70px 5% 35px;
 }
 
-.search {
-  width: min(600px, 90%);
-  margin: 25px auto 10px;
-  display: block;
-  padding: 15px 18px;
-  border-radius: 15px;
-  border: 1px solid #35406d;
-  background: #11172b;
-  color: white;
-  outline: none;
+.hero h1{
+  font-size:clamp(42px,8vw,80px);
+  margin:0;
+  font-weight:1000;
+  background:linear-gradient(90deg,#fff,#8deaff,#947bff);
+  -webkit-background-clip:text;
+  color:transparent;
 }
 
-.categories {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 8px;
-  padding: 10px 15px 25px;
+.hero p{
+  color:var(--muted);
+  font-size:18px;
 }
 
-.categories button,
-.back,
-.action {
-  border: 1px solid #3b4778;
-  background: #151c34;
-  color: white;
-  padding: 11px 16px;
-  border-radius: 12px;
+.controls{
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:10px;
+  padding:15px 5%;
 }
 
-.categories button:hover,
-.back:hover,
-.action:hover {
-  background: #6d5dfc;
+.search{
+  width:270px;
+  padding:14px 17px;
+  border-radius:14px;
+  border:1px solid #344263;
+  background:#11182c;
+  color:white;
+  outline:none;
 }
 
-.games {
-  width: min(1200px, 94%);
-  margin: auto;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-  gap: 18px;
-  padding-bottom: 40px;
+.filter{
+  padding:12px 17px;
+  border:1px solid #344263;
+  border-radius:13px;
+  background:#11182c;
+  color:white;
+  cursor:pointer;
 }
 
-.card {
-  background: rgba(18, 25, 49, 0.92);
-  border: 1px solid #303b68;
-  border-radius: 20px;
-  overflow: hidden;
-  transition: 0.2s;
+.filter.active{
+  background:linear-gradient(135deg,var(--purple),var(--blue));
+  border-color:transparent;
 }
 
-.card:hover {
-  transform: translateY(-6px);
-  border-color: #8175ff;
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(285px,1fr));
+  gap:22px;
+  padding:35px 5% 80px;
 }
 
-.card-image {
-  height: 150px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #10172d;
-  font-size: 70px;
+.card{
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:25px;
+  background:linear-gradient(145deg,#151d35,#0d1325);
+  box-shadow:0 15px 45px rgba(0,0,0,.25);
+  transition:.25s;
 }
 
-.card-content {
-  padding: 17px;
+.card:hover{
+  transform:translateY(-7px);
+  border-color:#6f5cff;
 }
 
-.card h2 {
-  margin: 0 0 7px;
-  font-size: 21px;
+.preview{
+  height:190px;
+  background:#090f1d;
 }
 
-.card p {
-  margin: 0;
-  color: #aeb8d5;
-  line-height: 1.4;
+.preview svg{
+  width:100%;
+  height:100%;
 }
 
-.play-button {
-  width: 100%;
-  margin-top: 15px;
-  padding: 12px;
-  border: 0;
-  border-radius: 12px;
-  background: linear-gradient(90deg, #6d5dfc, #9b5cff);
-  color: white;
-  font-weight: bold;
+.cardBody{
+  padding:20px;
 }
 
-#gameScreen {
-  display: none;
-  width: min(900px, 94%);
-  margin: 20px auto 50px;
-  background: rgba(13, 19, 38, 0.96);
-  border: 1px solid #35406d;
-  border-radius: 22px;
-  padding: 20px;
+.cardBody h2{
+  margin-top:0;
 }
 
-.game-title {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
+.cardBody p{
+  min-height:45px;
+  color:var(--muted);
 }
 
-.game-title h1 {
-  margin: 0;
+.best{
+  color:#7ce9ff;
+  margin-bottom:12px;
 }
 
-.stats {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin: 15px 0;
+.play{
+  width:100%;
+  padding:14px;
+  border:0;
+  border-radius:14px;
+  color:white;
+  font-weight:900;
+  background:linear-gradient(135deg,var(--purple),var(--blue));
+  cursor:pointer;
 }
 
-.stat {
-  padding: 10px 14px;
-  border-radius: 12px;
-  background: #151c34;
-  border: 1px solid #303b68;
+/* GAME */
+
+#gameScreen{
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:100;
+  background:rgba(2,4,10,.97);
+  overflow:auto;
 }
 
-.arena {
-  position: relative;
-  height: 350px;
-  background: #0a1020;
-  border: 1px solid #303b68;
-  border-radius: 17px;
-  overflow: hidden;
+.gameWindow{
+  width:min(1050px,94%);
+  min-height:calc(100vh - 40px);
+  margin:20px auto;
+  padding:25px;
+  border:1px solid #303e64;
+  border-radius:28px;
+  background:linear-gradient(145deg,#141c35,#0d1325);
 }
 
-.target {
-  position: absolute;
-  width: 55px;
-  height: 55px;
-  border-radius: 50%;
-  border: 4px solid white;
-  background: #ff4f81;
+.gameTop{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:20px;
 }
 
-.color-area {
-  text-align: center;
+.gameButtons{
+  display:flex;
+  gap:8px;
 }
 
-.color-preview {
-  font-size: 100px;
-  margin: 20px;
+.gameArea{
+  text-align:center;
 }
 
-.color-targets {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin: 15px;
+.bigBtn{
+  padding:14px 22px;
+  border:0;
+  border-radius:14px;
+  background:linear-gradient(135deg,var(--purple),var(--blue));
+  color:white;
+  font-weight:900;
+  cursor:pointer;
 }
 
-.color-target {
-  width: 80px;
-  height: 60px;
-  border-radius: 14px;
-  border: 2px solid white;
+.modeGrid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+  gap:18px;
+  margin:25px 0;
 }
 
-.color-controls {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 15px;
+.mode{
+  padding:25px 15px;
+  border:1px solid #303d64;
+  border-radius:20px;
+  background:#18213b;
+  cursor:pointer;
+  transition:.2s;
 }
 
-.color-controls label {
-  background: #151c34;
-  padding: 14px;
-  border-radius: 12px;
+.mode:hover{
+  transform:translateY(-5px);
+  border-color:#7b60ff;
 }
 
-.color-controls input {
-  width: 100%;
-  margin-top: 8px;
+.modeIcon{
+  font-size:50px;
 }
 
-.result {
-  font-size: 25px;
-  font-weight: bold;
-  margin: 15px 0;
-  text-align: center;
+/* CLOUD */
+
+.characterGrid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+  gap:15px;
+  margin:25px 0;
 }
 
-.flag-question {
-  text-align: center;
-  font-size: 80px;
-  margin: 20px;
+.character{
+  padding:15px;
+  border:1px solid #303d64;
+  border-radius:20px;
+  background:#151e35;
+  cursor:pointer;
+  transition:.2s;
 }
 
-.flag-options {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
+.character:hover{
+  transform:scale(1.03);
+  border-color:#765cff;
 }
 
-.flag-option {
-  height: 120px;
-  border-radius: 12px;
-  border: 2px solid #303b68;
+.character svg{
+  width:100%;
+  height:130px;
 }
 
-.memory {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
+.matchLayout{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
 }
 
-.memory button {
-  height: 85px;
-  font-size: 30px;
-  border: 1px solid #3b4778;
-  border-radius: 12px;
-  background: #151c34;
-  color: white;
+.artBox{
+  min-height:280px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:15px;
+  border:1px solid #2c3a5c;
+  border-radius:22px;
+  background:#080f1d;
 }
 
-.math-box {
-  text-align: center;
+.artBox svg{
+  width:100%;
+  max-width:370px;
+  height:270px;
 }
 
-.math-question {
-  font-size: 42px;
-  font-weight: bold;
-  margin: 30px;
+.sliders{
+  display:flex;
+  flex-direction:column;
+  gap:22px;
+  padding:20px;
+  border-radius:22px;
+  background:#10182c;
 }
 
-.math-input {
-  padding: 14px;
-  width: min(300px, 90%);
-  border-radius: 12px;
-  border: 1px solid #3b4778;
-  background: #10172d;
-  color: white;
-  text-align: center;
-  font-size: 20px;
+.sliderRow{
+  text-align:left;
 }
 
-canvas {
-  display: block;
-  width: min(400px, 100%);
-  height: auto;
-  margin: auto;
-  background: #070c18;
-  border-radius: 15px;
-  border: 1px solid #303b68;
+.sliderRow label{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:8px;
 }
 
-.controls {
-  display: grid;
-  grid-template-columns: repeat(3, 55px);
-  justify-content: center;
-  gap: 6px;
-  margin-top: 15px;
+input[type=range]{
+  width:100%;
+  height:12px;
+  appearance:none;
+  border-radius:20px;
+  cursor:pointer;
 }
 
-.controls button {
-  height: 50px;
-  border-radius: 10px;
-  border: 1px solid #3b4778;
-  background: #151c34;
-  color: white;
+.hue{
+  background:linear-gradient(
+    90deg,
+    red,
+    yellow,
+    lime,
+    cyan,
+    blue,
+    magenta,
+    red
+  );
 }
 
-@media(max-width:600px) {
-  .logo {
-    font-size: 36px;
+.light{
+  background:linear-gradient(90deg,#111,#777,#fff);
+}
+
+.black{
+  background:linear-gradient(90deg,#fff,#777,#000);
+}
+
+.score{
+  font-size:32px;
+  font-weight:1000;
+  margin:18px;
+}
+
+/* MEMORY */
+
+.memoryGrid{
+  max-width:700px;
+  margin:25px auto;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+}
+
+.memoryCard{
+  aspect-ratio:1;
+  border:0;
+  border-radius:18px;
+  background:#253250;
+  color:white;
+  font-size:42px;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.memoryCard.open{
+  background:#725aff;
+}
+
+/* TARGET */
+
+.targetArea{
+  height:500px;
+  position:relative;
+  overflow:hidden;
+  border:1px solid #2c3a5c;
+  border-radius:20px;
+  background:#080e1c;
+}
+
+.target{
+  position:absolute;
+  width:65px;
+  height:65px;
+  border-radius:50%;
+  border:3px solid white;
+  background:radial-gradient(
+    circle,
+    white 0 12%,
+    #ff4963 13% 32%,
+    white 33% 52%,
+    #ff4963 53% 72%,
+    white 73%
+  );
+}
+
+/* SNAKE */
+
+.snakeBoard{
+  position:relative;
+  width:min(700px,100%);
+  aspect-ratio:1;
+  margin:auto;
+  overflow:hidden;
+  border:2px solid #29405e;
+  background:#06101a;
+}
+
+.snakeSegment{
+  position:absolute;
+  width:4%;
+  height:4%;
+  border-radius:35%;
+}
+
+.playerHead,
+.playerBody{
+  background:#55e96c;
+  box-shadow:0 0 8px #55e96c;
+}
+
+.enemyHead,
+.enemyBody{
+  background:#ff6363;
+  box-shadow:0 0 7px #ff6363;
+}
+
+.food{
+  position:absolute;
+  width:4%;
+  height:4%;
+  border-radius:50%;
+  background:#ffd43b;
+  box-shadow:0 0 15px #ffd43b;
+}
+
+.dpad{
+  display:grid;
+  grid-template-columns:repeat(3,60px);
+  justify-content:center;
+  gap:6px;
+  margin-top:15px;
+}
+
+.dpad button{
+  height:55px;
+  border:0;
+  border-radius:12px;
+  background:#202c4b;
+  color:white;
+  font-size:22px;
+}
+
+/* FULLSCREEN */
+
+#gameScreen:fullscreen{
+  background:#050711;
+}
+
+#gameScreen:fullscreen .gameWindow{
+  width:100%;
+  min-height:100vh;
+  margin:0;
+  border:0;
+  border-radius:0;
+}
+
+/* MOBILE */
+
+@media(max-width:700px){
+
+  header{
+    padding:15px 4%;
   }
 
-  .color-controls {
-    grid-template-columns: 1fr;
+  .hero{
+    padding:45px 5% 25px;
   }
 
-  .flag-options {
-    grid-template-columns: 1fr;
+  .grid{
+    grid-template-columns:1fr;
+    padding:25px 4% 60px;
   }
 
-  .memory {
-    grid-template-columns: repeat(3, 1fr);
+  .gameWindow{
+    width:100%;
+    min-height:100vh;
+    margin:0;
+    border-radius:0;
+    padding:17px;
   }
 
-  .arena {
-    height: 300px;
+  .gameTop{
+    align-items:flex-start;
+  }
+
+  .gameTop h1{
+    font-size:24px;
+  }
+
+  .gameButtons{
+    flex-direction:column;
+  }
+
+  .matchLayout{
+    grid-template-columns:1fr;
+  }
+
+  .memoryGrid{
+    gap:7px;
+  }
+
+  .memoryCard{
+    font-size:30px;
+  }
+
+  .targetArea{
+    height:390px;
   }
 }
 </style>
@@ -347,1296 +534,1674 @@ canvas {
 
 <body>
 
-<header class="header">
-  <div class="logo">🎮 GAMEHUB</div>
-  <div class="subtitle">
-    Spiele • Punkte sammeln • Highscores knacken
-  </div>
-
-  <input
-    id="search"
-    class="search"
-    type="text"
-    placeholder="🔎 Spiel suchen..."
-  >
+<header>
+  <div class="logo">GAME<span>HUB</span> 🎮</div>
+  <button class="musicBtn" onclick="toggleMusic()" id="musicButton">
+    🎵 Musik an
+  </button>
 </header>
 
-<div class="categories">
-  <button onclick="filterGames('all')">Alle</button>
-  <button onclick="filterGames('skill')">🎯 Skill</button>
-  <button onclick="filterGames('puzzle')">🧠 Puzzle</button>
-  <button onclick="filterGames('arcade')">🕹️ Arcade</button>
+<section class="hero">
+  <h1>PLAY. MATCH. WIN.</h1>
+  <p>Deine eigene Game-Zentrale.</p>
+</section>
+
+<div class="controls">
+  <input
+    class="search"
+    id="search"
+    placeholder="🔎 Spiel suchen..."
+    oninput="renderGames()">
+
+  <button class="filter active" onclick="setFilter('all',this)">
+    Alle
+  </button>
+
+  <button class="filter" onclick="setFilter('skill',this)">
+    Skill
+  </button>
+
+  <button class="filter" onclick="setFilter('arcade',this)">
+    Arcade
+  </button>
+
+  <button class="filter" onclick="setFilter('memory',this)">
+    Memory
+  </button>
 </div>
 
-<main id="games" class="games"></main>
+<main class="grid" id="games"></main>
 
-<section id="gameScreen"></section>
+<div id="gameScreen">
+
+  <div class="gameWindow">
+
+    <div class="gameTop">
+
+      <h1 id="gameTitle">Spiel</h1>
+
+      <div class="gameButtons">
+        <button class="fullBtn" onclick="toggleFullscreen()">
+          ⛶ Vollbild
+        </button>
+
+        <button class="closeBtn" onclick="closeGame()">
+          ✕ Schließen
+        </button>
+      </div>
+
+    </div>
+
+    <div class="gameArea" id="gameContent"></div>
+
+  </div>
+
+</div>
 
 <script>
 
-const games = [
+/* ==============================
+   SPIELE
+============================== */
+
+const games=[
   {
-    id: "cloud",
-    name: "Cloud Match",
-    description: "Passe die Farben von Wolken, Cartoons und mehr an.",
-    category: "skill",
-    image: "☁️"
+    id:"cloud",
+    name:"Cloud Match",
+    description:"Cartoons, Flaggen und Farben perfekt nachmachen.",
+    category:"skill"
   },
   {
-    id: "cartoon",
-    name: "Cartoon Color",
-    description: "Passe die Farben eines Cartoon-Charakters an.",
-    category: "skill",
-    image: "🎨"
+    id:"memory",
+    name:"Memory Mix",
+    description:"Finde alle Cartoon-Paare.",
+    category:"memory"
   },
   {
-    id: "flags",
-    name: "Flag Match",
-    description: "Finde die richtige Farbkombination zur Flagge.",
-    category: "puzzle",
-    image: "🚩"
+    id:"target",
+    name:"Target Rush",
+    description:"Klicke die Ziele bevor sie verschwinden.",
+    category:"arcade"
   },
   {
-    id: "target",
-    name: "Target Rush",
-    description: "Klicke so viele Ziele wie möglich.",
-    category: "skill",
-    image: "🎯"
+    id:"snake",
+    name:"Snake Arena",
+    description:"Viele Schlangen kämpfen gleichzeitig.",
+    category:"arcade"
   },
   {
-    id: "memory",
-    name: "Memory Mix",
-    description: "Finde alle passenden Paare.",
-    category: "puzzle",
-    image: "🧠"
-  },
-  {
-    id: "math",
-    name: "Math Rush",
-    description: "Löse Matheaufgaben möglichst schnell.",
-    category: "puzzle",
-    image: "➗"
-  },
-  {
-    id: "snake",
-    name: "Snake Zone",
-    description: "Sammle Punkte und werde immer länger.",
-    category: "arcade",
-    image: "🐍"
+    id:"math",
+    name:"Math Rush",
+    description:"Rechne so schnell wie möglich.",
+    category:"skill"
   }
 ];
 
-let currentCategory = "all";
+let filter="all";
 
-function getBest(id) {
-  return Number(localStorage.getItem("best_" + id) || 0);
+function setFilter(f,btn){
+
+  filter=f;
+
+  document.querySelectorAll(".filter")
+    .forEach(x=>x.classList.remove("active"));
+
+  btn.classList.add("active");
+
+  renderGames();
 }
 
-function saveBest(id, score) {
-  if(score > getBest(id)) {
-    localStorage.setItem("best_" + id, score);
+/* ==============================
+   SPIELBILDER
+============================== */
+
+function previewSVG(id){
+
+  if(id==="cloud"){
+    return `
+    <svg viewBox="0 0 500 250">
+      <defs>
+        <linearGradient id="cloudBg">
+          <stop stop-color="#142b50"/>
+          <stop offset="1" stop-color="#29184e"/>
+        </linearGradient>
+      </defs>
+
+      <rect width="500" height="250" fill="url(#cloudBg)"/>
+
+      <circle cx="400" cy="60" r="35" fill="#ffd84c"/>
+
+      <circle cx="170" cy="135" r="45" fill="#fff"/>
+      <circle cx="225" cy="110" r="60" fill="#fff"/>
+      <circle cx="280" cy="135" r="45" fill="#fff"/>
+
+      <circle cx="205" cy="135" r="18" fill="#00d5ff"/>
+      <circle cx="255" cy="135" r="18" fill="#7b5cff"/>
+
+      <text x="250" y="220"
+        text-anchor="middle"
+        fill="white"
+        font-size="22"
+        font-weight="bold">
+        CLOUD MATCH
+      </text>
+    </svg>`;
+  }
+
+  if(id==="memory"){
+    return `
+    <svg viewBox="0 0 500 250">
+      <rect width="500" height="250" fill="#10182e"/>
+
+      <rect x="55" y="30" width="110" height="85" rx="15" fill="#29375b"/>
+      <rect x="195" y="30" width="110" height="85" rx="15" fill="#29375b"/>
+      <rect x="335" y="30" width="110" height="85" rx="15" fill="#29375b"/>
+
+      <rect x="55" y="135" width="110" height="85" rx="15" fill="#29375b"/>
+      <rect x="195" y="135" width="110" height="85" rx="15" fill="#29375b"/>
+      <rect x="335" y="135" width="110" height="85" rx="15" fill="#29375b"/>
+
+      <text x="110" y="90" text-anchor="middle" font-size="45">🧽</text>
+      <text x="250" y="90" text-anchor="middle" font-size="45">👽</text>
+      <text x="390" y="90" text-anchor="middle" font-size="45">🤖</text>
+      <text x="110" y="195" text-anchor="middle" font-size="45">🐱</text>
+      <text x="250" y="195" text-anchor="middle" font-size="45">🦆</text>
+      <text x="390" y="195" text-anchor="middle" font-size="45">👾</text>
+    </svg>`;
+  }
+
+  if(id==="target"){
+    return `
+    <svg viewBox="0 0 500 250">
+      <rect width="500" height="250" fill="#090f1d"/>
+
+      <circle cx="130" cy="85" r="42" fill="white"/>
+      <circle cx="130" cy="85" r="29" fill="#ff4963"/>
+      <circle cx="130" cy="85" r="14" fill="white"/>
+
+      <circle cx="360" cy="155" r="48" fill="white"/>
+      <circle cx="360" cy="155" r="33" fill="#ff4963"/>
+      <circle cx="360" cy="155" r="16" fill="white"/>
+
+      <text x="250" y="225"
+        fill="white"
+        text-anchor="middle"
+        font-size="22">
+        TARGET RUSH
+      </text>
+    </svg>`;
+  }
+
+  if(id==="snake"){
+    return `
+    <svg viewBox="0 0 500 250">
+      <rect width="500" height="250" fill="#06131b"/>
+
+      <path d="M40 90 Q110 30 190 90 T350 90"
+        fill="none"
+        stroke="#55e96c"
+        stroke-width="28"
+        stroke-linecap="round"/>
+
+      <path d="M110 175 Q190 225 285 170 T450 170"
+        fill="none"
+        stroke="#ff6363"
+        stroke-width="28"
+        stroke-linecap="round"/>
+
+      <circle cx="40" cy="90" r="17" fill="#8dff9b"/>
+      <circle cx="110" cy="175" r="17" fill="#ff9a9a"/>
+
+      <text x="250" y="35"
+        fill="white"
+        text-anchor="middle"
+        font-size="22">
+        SNAKE ARENA
+      </text>
+    </svg>`;
+  }
+
+  return `
+  <svg viewBox="0 0 500 250">
+    <rect width="500" height="250" fill="#18213b"/>
+    <text x="250" y="145"
+      text-anchor="middle"
+      font-size="70">➗</text>
+  </svg>`;
+}
+
+function renderGames(){
+
+  const search=
+    document.getElementById("search").value.toLowerCase();
+
+  const list=games.filter(g=>
+    (filter==="all"||g.category===filter)&&
+    g.name.toLowerCase().includes(search)
+  );
+
+  document.getElementById("games").innerHTML=
+    list.map(g=>`
+
+      <article class="card">
+
+        <div class="preview">
+          ${previewSVG(g.id)}
+        </div>
+
+        <div class="cardBody">
+
+          <h2>${g.name}</h2>
+
+          <p>${g.description}</p>
+
+          <div class="best">
+            🏆 Best:
+            ${localStorage.getItem("best_"+g.id)||0}
+          </div>
+
+          <button class="play"
+            onclick="startGame('${g.id}')">
+            ▶ Spielen
+          </button>
+
+        </div>
+
+      </article>
+
+    `).join("");
+}
+
+/* ==============================
+   GAME SYSTEM
+============================== */
+
+function startGame(id){
+
+  stopMusic();
+
+  if(id==="cloud") cloudMenu();
+  if(id==="memory") memoryGame();
+  if(id==="target") targetRush();
+  if(id==="snake") snakeGame();
+  if(id==="math") mathRush();
+}
+
+function openGame(title,content){
+
+  document.getElementById("gameTitle").textContent=title;
+
+  document.getElementById("gameContent").innerHTML=content;
+
+  document.getElementById("gameScreen").style.display="block";
+}
+
+function closeGame(){
+
+  if(document.fullscreenElement)
+    document.exitFullscreen();
+
+  document.getElementById("gameScreen").style.display="none";
+
+  document.getElementById("gameContent").innerHTML="";
+
+  if(musicWanted)
+    startMusic();
+}
+
+/* ==============================
+   FULLSCREEN
+============================== */
+
+function toggleFullscreen(){
+
+  const screen=document.getElementById("gameScreen");
+
+  if(!document.fullscreenElement){
+
+    if(screen.requestFullscreen)
+      screen.requestFullscreen();
+
+  }else{
+
+    if(document.exitFullscreen)
+      document.exitFullscreen();
   }
 }
 
-function renderGames() {
+/* ==============================
+   CLOUD MATCH MENU
+============================== */
 
-  const container = document.getElementById("games");
-  const search = document
-    .getElementById("search")
-    .value
-    .toLowerCase();
+function cloudMenu(){
 
-  container.innerHTML = "";
+  openGame("☁️ Cloud Match",`
 
-  games
-    .filter(game => {
-      const categoryOK =
-        currentCategory === "all" ||
-        game.category === currentCategory;
+    <h2>Wähle deine Challenge</h2>
 
-      const searchOK =
-        game.name.toLowerCase().includes(search) ||
-        game.description.toLowerCase().includes(search);
+    <div class="modeGrid">
 
-      return categoryOK && searchOK;
-    })
-    .forEach(game => {
+      <div class="mode"
+        onclick="cartoonCharacters()">
 
-      const card = document.createElement("div");
-      card.className = "card";
+        <div class="modeIcon">📺</div>
 
-      card.innerHTML = `
-        <div class="card-image">
-          ${game.image}
+        <h2>Cartoon Color</h2>
+
+        <p>
+          Wähle eine Cartoon-Figur
+          und passe ihre Farbe an.
+        </p>
+
+      </div>
+
+      <div class="mode"
+        onclick="startCloud('flag')">
+
+        <div class="modeIcon">🌍</div>
+
+        <h2>Flag Match</h2>
+
+        <p>
+          Farben von Flaggen treffen.
+        </p>
+
+      </div>
+
+      <div class="mode"
+        onclick="startCloud('mixed')">
+
+        <div class="modeIcon">🔥</div>
+
+        <h2>Gemischt</h2>
+
+        <p>
+          Alles durcheinander.
+        </p>
+
+      </div>
+
+    </div>
+  `);
+}
+
+/* ==============================
+   CARTOON CHARACTERS
+============================== */
+
+const characters=[
+
+  {
+    id:"sponge",
+    name:"SpongeBob",
+    emoji:"🧽",
+    hue:52,
+    light:58,
+    black:5
+  },
+
+  {
+    id:"simpsons",
+    name:"Simpsons",
+    emoji:"🟡",
+    hue:52,
+    light:55,
+    black:8
+  },
+
+  {
+    id:"patrick",
+    name:"Patrick",
+    emoji:"⭐",
+    hue:350,
+    light:58,
+    black:7
+  },
+
+  {
+    id:"rick",
+    name:"Rick",
+    emoji:"🧑‍🔬",
+    hue:185,
+    light:48,
+    black:12
+  },
+
+  {
+    id:"morty",
+    name:"Morty",
+    emoji:"👦",
+    hue:40,
+    light:55,
+    black:10
+  },
+
+  {
+    id:"cartoon",
+    name:"Überraschung",
+    emoji:"👾",
+    hue:275,
+    light:50,
+    black:15
+  }
+
+];
+
+function cartoonCharacters(){
+
+  openGame("📺 Cartoon Color",`
+
+    <h2>Wähle eine Figur</h2>
+
+    <p>
+      Suche dir eine Figur aus und versuche anschließend,
+      die Zielfarbe möglichst genau zu treffen.
+    </p>
+
+    <div class="characterGrid">
+
+      ${characters.map(c=>`
+
+        <div class="character"
+          onclick="startCartoon('${c.id}')">
+
+          ${characterSVG(c,0)}
+
+          <h3>${c.name}</h3>
+
         </div>
 
-        <div class="card-content">
+      `).join("")}
 
-          <h2>${game.name}</h2>
+    </div>
 
-          <p>${game.description}</p>
+  `);
+}
 
-          <p style="margin-top:10px">
-            🏆 Best: ${getBest(game.id)}
-          </p>
+function characterSVG(c,h){
 
-          <button
-            class="play-button"
-            onclick="startGame('${game.id}')"
-          >
-            ▶ SPIELEN
+  const color=
+    h===0
+      ? `hsl(${c.hue},75%,${c.light-c.black*.35}%)`
+      : `hsl(${h.h},75%,${h.light-h.black*.35}%)`;
+
+  return `
+  <svg viewBox="0 0 200 140">
+
+    <rect width="200" height="140"
+      rx="20"
+      fill="#0a1121"/>
+
+    <circle cx="100" cy="72"
+      r="48"
+      fill="${color}"/>
+
+    <circle cx="82" cy="65"
+      r="7"
+      fill="#111"/>
+
+    <circle cx="118" cy="65"
+      r="7"
+      fill="#111"/>
+
+    <path d="M75 90 Q100 108 125 90"
+      fill="none"
+      stroke="#111"
+      stroke-width="6"
+      stroke-linecap="round"/>
+
+    <text x="100" y="130"
+      text-anchor="middle"
+      font-size="15">
+      ${c.emoji} ${c.name}
+    </text>
+
+  </svg>`;
+}
+
+let currentCharacter=null;
+let cartoonScore=0;
+let cartoonRound=0;
+
+function startCartoon(id){
+
+  currentCharacter=
+    characters.find(c=>c.id===id);
+
+  cartoonScore=0;
+  cartoonRound=0;
+
+  cartoonRoundScreen();
+}
+
+function cartoonRoundScreen(){
+
+  if(cartoonRound>=5){
+
+    saveBest("cloud",cartoonScore);
+
+    openGame("🏆 Cartoon Color",`
+
+      <div style="font-size:70px">📺</div>
+
+      <h2>Cartoon Color fertig!</h2>
+
+      <div class="score">
+        ${cartoonScore}/500
+      </div>
+
+      <button class="bigBtn"
+        onclick="cartoonCharacters()">
+        Nochmal
+      </button>
+
+    `);
+
+    return;
+  }
+
+  const variation={
+    h:Math.floor(Math.random()*40)-20,
+    light:Math.floor(Math.random()*30)-15,
+    black:Math.floor(Math.random()*20)-10
+  };
+
+  const target={
+    h:(currentCharacter.hue+variation.h+360)%360,
+    light:Math.max(10,
+      Math.min(90,currentCharacter.light+variation.light)),
+    black:Math.max(0,
+      Math.min(70,currentCharacter.black+variation.black))
+  };
+
+  openGame("📺 Cartoon Color",`
+
+    <div class="score">
+      Runde ${cartoonRound+1}/5 · ${cartoonScore} Punkte
+    </div>
+
+    <div class="matchLayout">
+
+      <div>
+
+        <h3>🎯 Ziel</h3>
+
+        <div class="artBox">
+          ${characterSVG(currentCharacter,target)}
+        </div>
+
+      </div>
+
+      <div>
+
+        <h3>🎨 Deine Version</h3>
+
+        <div class="artBox"
+          id="cartoonPreview">
+
+          ${characterSVG(
+            currentCharacter,
+            {
+              h:180,
+              light:50,
+              black:0
+            }
+          )}
+
+        </div>
+
+        <div class="sliders">
+
+          <div class="sliderRow">
+
+            <label>
+              <span>🌈 Farbton</span>
+              <b id="cv1">180°</b>
+            </label>
+
+            <input
+              class="hue"
+              id="ch"
+              type="range"
+              min="0"
+              max="360"
+              value="180"
+              oninput="updateCartoon()">
+
+          </div>
+
+          <div class="sliderRow">
+
+            <label>
+              <span>☀️ Helligkeit</span>
+              <b id="cv2">50%</b>
+            </label>
+
+            <input
+              class="light"
+              id="cl"
+              type="range"
+              min="10"
+              max="90"
+              value="50"
+              oninput="updateCartoon()">
+
+          </div>
+
+          <div class="sliderRow">
+
+            <label>
+              <span>⚫ Schwarzanteil</span>
+              <b id="cv3">0%</b>
+            </label>
+
+            <input
+              class="black"
+              id="cb"
+              type="range"
+              min="0"
+              max="70"
+              value="0"
+              oninput="updateCartoon()">
+
+          </div>
+
+          <button class="bigBtn"
+            onclick="checkCartoon(${target.h},${target.light},${target.black})">
+            ✓ Fertig
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  `);
+}
+
+function updateCartoon(){
+
+  const h=+document.getElementById("ch").value;
+  const l=+document.getElementById("cl").value;
+  const b=+document.getElementById("cb").value;
+
+  document.getElementById("cv1").textContent=h+"°";
+  document.getElementById("cv2").textContent=l+"%";
+  document.getElementById("cv3").textContent=b+"%";
+
+  document.getElementById("cartoonPreview").innerHTML=
+    characterSVG(currentCharacter,{h,l,black:b});
+}
+
+function checkCartoon(th,tl,tb){
+
+  const h=+document.getElementById("ch").value;
+  const l=+document.getElementById("cl").value;
+  const b=+document.getElementById("cb").value;
+
+  const dh=Math.min(Math.abs(h-th),360-Math.abs(h-th));
+  const dl=Math.abs(l-tl);
+  const db=Math.abs(b-tb);
+
+  const accuracy=Math.max(
+    0,
+    Math.round(
+      100-Math.min(100,
+        dh/1.8+dl*.7+db*.7
+      )
+    )
+  );
+
+  const points=accuracy*1;
+
+  cartoonScore+=points;
+
+  document.getElementById("gameContent").innerHTML+=`
+
+    <div style="margin-top:20px">
+
+      <h2>${accuracy}% getroffen!</h2>
+
+      <p>+${points} Punkte</p>
+
+      <button class="bigBtn"
+        onclick="nextCartoon()">
+        Weiter →
+      </button>
+
+    </div>
+  `;
+}
+
+function nextCartoon(){
+
+  cartoonRound++;
+
+  cartoonRoundScreen();
+}
+
+/* ==============================
+   FLAG MATCH
+============================== */
+
+function startCloud(mode){
+
+  let rounds=[
+    {h:0,l:50,b:5},
+    {h:220,l:48,b:10},
+    {h:120,l:48,b:8},
+    {h:50,l:55,b:5},
+    {h:280,l:45,b:15}
+  ];
+
+  let index=0;
+  let total=0;
+
+  function round(){
+
+    if(index>=rounds.length){
+
+      saveBest("cloud",total);
+
+      openGame("🏆 Flag Match",`
+        <div style="font-size:70px">🌍</div>
+        <h2>Fertig!</h2>
+        <div class="score">${total}/500</div>
+        <button class="bigBtn"
+          onclick="cloudMenu()">
+          Nochmal
+        </button>
+      `);
+
+      return;
+    }
+
+    const target=rounds[index];
+
+    openGame("🌍 Flag Match",`
+
+      <div class="score">
+        Runde ${index+1}/5 · ${total} Punkte
+      </div>
+
+      <div class="matchLayout">
+
+        <div class="artBox">
+
+          <svg viewBox="0 0 350 250">
+
+            <rect x="35" y="45"
+              width="280"
+              height="160"
+              rx="8"
+              fill="#151b2e"/>
+
+            <rect x="55" y="65"
+              width="240"
+              height="120"
+              rx="5"
+              fill="hsl(${target.h},75%,${target.l-target.b*.35}%)"/>
+
+            <text x="175" y="225"
+              text-anchor="middle"
+              fill="white">
+              Zielfarbe
+            </text>
+
+          </svg>
+
+        </div>
+
+        <div>
+
+          <div class="sliders">
+
+            <div class="sliderRow">
+              <label>
+                <span>🌈 Farbton</span>
+                <b id="fh">180°</b>
+              </label>
+
+              <input id="fhInput"
+                class="hue"
+                type="range"
+                min="0"
+                max="360"
+                value="180">
+            </div>
+
+            <div class="sliderRow">
+              <label>
+                <span>☀️ Helligkeit</span>
+                <b id="fl">50%</b>
+              </label>
+
+              <input id="flInput"
+                class="light"
+                type="range"
+                min="10"
+                max="90"
+                value="50">
+            </div>
+
+            <div class="sliderRow">
+              <label>
+                <span>⚫ Schwarzanteil</span>
+                <b id="fb">0%</b>
+              </label>
+
+              <input id="fbInput"
+                class="black"
+                type="range"
+                min="0"
+                max="70"
+                value="0">
+            </div>
+
+            <button class="bigBtn" id="flagCheck">
+              ✓ Prüfen
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+    `);
+
+    const fh=document.getElementById("fhInput");
+    const fl=document.getElementById("flInput");
+    const fb=document.getElementById("fbInput");
+
+    function update(){
+
+      document.getElementById("fh").textContent=fh.value+"°";
+      document.getElementById("fl").textContent=fl.value+"%";
+      document.getElementById("fb").textContent=fb.value+"%";
+    }
+
+    fh.oninput=update;
+    fl.oninput=update;
+    fb.oninput=update;
+
+    document.getElementById("flagCheck").onclick=()=>{
+
+      const dh=Math.min(
+        Math.abs(+fh.value-target.h),
+        360-Math.abs(+fh.value-target.h)
+      );
+
+      const dl=Math.abs(+fl.value-target.l);
+      const db=Math.abs(+fb.value-target.b);
+
+      const accuracy=Math.max(
+        0,
+        Math.round(
+          100-Math.min(100,dh/1.8+dl*.7+db*.7)
+        )
+      );
+
+      total+=accuracy;
+
+      document.getElementById("gameContent").innerHTML+=`
+
+        <div style="margin-top:20px">
+
+          <h2>${accuracy}% getroffen!</h2>
+
+          <button class="bigBtn"
+            id="nextFlag">
+            Weiter →
           </button>
 
         </div>
       `;
 
-      container.appendChild(card);
-    });
+      document.getElementById("nextFlag").onclick=()=>{
+        index++;
+        round();
+      };
+    };
+  }
+
+  round();
 }
 
-document
-  .getElementById("search")
-  .addEventListener("input", renderGames);
+/* ==============================
+   MEMORY
+============================== */
 
-function filterGames(category) {
-  currentCategory = category;
+function memoryGame(){
+
+  const icons=[
+    "🧽","🧽",
+    "👽","👽",
+    "🤖","🤖",
+    "🐱","🐱",
+    "🦆","🦆",
+    "👾","👾",
+    "🦸","🦸",
+    "🧑‍🔬","🧑‍🔬"
+  ].sort(()=>Math.random()-.5);
+
+  let first=null;
+  let lock=false;
+  let matches=0;
+  let moves=0;
+
+  openGame("🧠 Memory Mix",`
+    <h2>Finde alle Paare!</h2>
+    <p id="memoryInfo">Züge: 0</p>
+    <div class="memoryGrid" id="memoryGrid"></div>
+  `);
+
+  const grid=document.getElementById("memoryGrid");
+
+  icons.forEach(icon=>{
+
+    const card=document.createElement("button");
+
+    card.className="memoryCard";
+    card.textContent="❓";
+
+    card.onclick=()=>{
+
+      if(lock||card.classList.contains("open"))
+        return;
+
+      card.classList.add("open");
+      card.textContent=icon;
+
+      if(!first){
+
+        first={card,icon};
+        return;
+      }
+
+      moves++;
+
+      document.getElementById("memoryInfo").textContent=
+        "Züge: "+moves;
+
+      if(first.icon===icon){
+
+        matches++;
+        first=null;
+
+        if(matches===8){
+
+          const points=Math.max(0,1000-moves*20);
+
+          saveBest("memory",points);
+
+          setTimeout(()=>{
+
+            openGame("🏆 Memory Mix",`
+
+              <div style="font-size:70px">🧠</div>
+
+              <h2>Alle gefunden!</h2>
+
+              <div class="score">
+                ${points} Punkte
+              </div>
+
+              <button class="bigBtn"
+                onclick="memoryGame()">
+                Nochmal
+              </button>
+
+            `);
+
+          },400);
+        }
+
+      }else{
+
+        lock=true;
+
+        const old=first;
+
+        setTimeout(()=>{
+
+          old.card.classList.remove("open");
+          old.card.textContent="❓";
+
+          card.classList.remove("open");
+          card.textContent="❓";
+
+          first=null;
+          lock=false;
+
+        },650);
+      }
+    };
+
+    grid.appendChild(card);
+  });
+}
+
+/* ==============================
+   TARGET RUSH
+============================== */
+
+function targetRush(){
+
+  let score=0;
+  let time=20;
+  let running=true;
+
+  openGame("🎯 Target Rush",`
+    <h2 id="targetScore">Punkte: 0</h2>
+    <h3 id="targetTime">Zeit: 20</h3>
+    <div class="targetArea" id="targetArea"></div>
+  `);
+
+  const area=document.getElementById("targetArea");
+
+  function spawn(){
+
+    if(!running)return;
+
+    area.innerHTML="";
+
+    const target=document.createElement("div");
+
+    target.className="target";
+
+    target.style.left=Math.random()*85+"%";
+    target.style.top=Math.random()*82+"%";
+
+    target.onclick=()=>{
+
+      score+=10;
+
+      document.getElementById("targetScore")
+        .textContent="Punkte: "+score;
+
+      spawn();
+    };
+
+    area.appendChild(target);
+
+    /* deutlich schneller */
+    const delay=Math.max(180,650-score*3);
+
+    setTimeout(()=>{
+
+      if(running&&area.contains(target)){
+        target.remove();
+        spawn();
+      }
+
+    },delay);
+  }
+
+  spawn();
+
+  const timer=setInterval(()=>{
+
+    time--;
+
+    if(document.getElementById("targetTime"))
+      document.getElementById("targetTime")
+        .textContent="Zeit: "+time;
+
+    if(time<=0){
+
+      clearInterval(timer);
+      running=false;
+
+      saveBest("target",score);
+
+      openGame("🏆 Target Rush",`
+
+        <div style="font-size:70px">🎯</div>
+
+        <h2>Runde beendet!</h2>
+
+        <div class="score">
+          ${score} Punkte
+        </div>
+
+        <button class="bigBtn"
+          onclick="targetRush()">
+          Nochmal
+        </button>
+
+      `);
+    }
+
+  },1000);
+}
+
+/* ==============================
+   SNAKE
+============================== */
+
+function snakeGame(){
+
+  const size=25;
+
+  let player={
+    x:12,
+    y:12,
+    dir:{x:1,y:0},
+    body:[
+      {x:12,y:12},
+      {x:11,y:12},
+      {x:10,y:12}
+    ]
+  };
+
+  let enemies=[
+    enemy(5,5,1,0),
+    enemy(19,6,-1,0),
+    enemy(6,19,0,-1),
+    enemy(19,19,-1,0)
+  ];
+
+  let food={
+    x:17,
+    y:13
+  };
+
+  let score=0;
+  let alive=true;
+
+  function enemy(x,y,dx,dy){
+
+    return {
+      dir:{x:dx,y:dy},
+      body:[
+        {x,y},
+        {x:x-dx,y:y-dy},
+        {x:x-dx*2,y:y-dy*2},
+        {x:x-dx*3,y:y-dy*3},
+        {x:x-dx*4,y:y-dy*4}
+      ]
+    };
+  }
+
+  openGame("🐍 Snake Arena",`
+
+    <h2 id="snakeScore">
+      Punkte: 0
+    </h2>
+
+    <div class="snakeBoard"
+      id="snakeBoard">
+    </div>
+
+    <div class="dpad">
+
+      <span></span>
+      <button onclick="changeSnake(0,-1)">▲</button>
+      <span></span>
+
+      <button onclick="changeSnake(-1,0)">◀</button>
+      <button onclick="changeSnake(0,1)">▼</button>
+      <button onclick="changeSnake(1,0)">▶</button>
+
+    </div>
+
+    <p>
+      🐍 Deine Schlange ist grün.
+      Andere Schlangen sind rot.
+    </p>
+  `);
+
+  window.changeSnake=function(dx,dy){
+
+    if(
+      dx===-player.dir.x &&
+      dy===-player.dir.y
+    )return;
+
+    player.dir={x:dx,y:dy};
+  };
+
+  document.onkeydown=e=>{
+
+    if(e.key==="ArrowUp")
+      changeSnake(0,-1);
+
+    if(e.key==="ArrowDown")
+      changeSnake(0,1);
+
+    if(e.key==="ArrowLeft")
+      changeSnake(-1,0);
+
+    if(e.key==="ArrowRight")
+      changeSnake(1,0);
+  };
+
+  function render(){
+
+    const board=document.getElementById("snakeBoard");
+
+    if(!board)return;
+
+    board.innerHTML="";
+
+    function draw(p,cls){
+
+      const el=document.createElement("div");
+
+      el.className="snakeSegment "+cls;
+
+      el.style.left=(p.x*4)+"%";
+      el.style.top=(p.y*4)+"%";
+
+      board.appendChild(el);
+    }
+
+    player.body.forEach((p,i)=>
+      draw(p,i===0?"playerHead":"playerBody")
+    );
+
+    enemies.forEach(e=>
+      e.body.forEach((p,i)=>
+        draw(p,i===0?"enemyHead":"enemyBody")
+      )
+    );
+
+    const f=document.createElement("div");
+
+    f.className="food";
+    f.style.left=(food.x*4)+"%";
+    f.style.top=(food.y*4)+"%";
+
+    board.appendChild(f);
+  }
+
+  function step(){
+
+    if(!alive)return;
+
+    const head={
+      x:player.body[0].x+player.dir.x,
+      y:player.body[0].y+player.dir.y
+    };
+
+    if(
+      head.x<0||
+      head.y<0||
+      head.x>=size||
+      head.y>=size
+    ){
+      end();
+      return;
+    }
+
+    player.body.unshift(head);
+
+    if(
+      head.x===food.x &&
+      head.y===food.y
+    ){
+
+      score+=10;
+
+      food={
+        x:Math.floor(Math.random()*size),
+        y:Math.floor(Math.random()*size)
+      };
+
+    }else{
+
+      player.body.pop();
+    }
+
+    enemies.forEach(e=>{
+
+      const h=e.body[0];
+
+      let dx=e.dir.x;
+      let dy=e.dir.y;
+
+      if(Math.random()<.35){
+
+        dx=Math.sign(food.x-h.x);
+        dy=Math.sign(food.y-h.y);
+
+        if(
+          Math.abs(food.x-h.x)>
+          Math.abs(food.y-h.y)
+        )dy=0;
+        else dx=0;
+      }
+
+      if(h.x+dx<0||h.x+dx>=size)
+        dx=-dx;
+
+      if(h.y+dy<0||h.y+dy>=size)
+        dy=-dy;
+
+      e.dir={x:dx,y:dy};
+
+      e.body.unshift({
+        x:h.x+dx,
+        y:h.y+dy
+      });
+
+      e.body.pop();
+    });
+
+    /*
+      WICHTIG:
+      Nur der hintere Bereich einer
+      gegnerischen Schlange kann
+      von vorne getroffen werden.
+    */
+
+    enemies=enemies.filter(e=>{
+
+      const tailStart=
+        Math.max(2,e.body.length-3);
+
+      for(
+        let i=tailStart;
+        i<e.body.length;
+        i++
+      ){
+
+        if(
+          player.body[0].x===e.body[i].x &&
+          player.body[0].y===e.body[i].y
+        ){
+
+          score+=50;
+          return false;
+        }
+      }
+
+      return true;
+    });
+
+    document.getElementById("snakeScore")
+      .textContent="Punkte: "+score;
+
+    render();
+  }
+
+  function end(){
+
+    alive=false;
+
+    saveBest("snake",score);
+
+    openGame("🐍 Snake Arena",`
+
+      <div style="font-size:70px">🐍</div>
+
+      <h2>Game Over</h2>
+
+      <div class="score">
+        ${score} Punkte
+      </div>
+
+      <button class="bigBtn"
+        onclick="snakeGame()">
+        Nochmal
+      </button>
+    `);
+  }
+
+  render();
+
+  const loop=setInterval(()=>{
+
+    if(!alive){
+      clearInterval(loop);
+      return;
+    }
+
+    step();
+
+  },170);
+}
+
+/* ==============================
+   MATH
+============================== */
+
+function mathRush(){
+
+  let score=0;
+  let time=30;
+  let answer=0;
+
+  openGame("➗ Math Rush",`
+
+    <h2 id="mathQuestion"></h2>
+
+    <input
+      id="mathInput"
+      type="number"
+      placeholder="Antwort"
+      style="
+        padding:14px;
+        border-radius:13px;
+        border:1px solid #39496e;
+        background:#0b1223;
+        color:white;
+        width:200px;
+        text-align:center">
+
+    <button
+      class="bigBtn"
+      onclick="checkMath()">
+      OK
+    </button>
+
+    <h3 id="mathScore">
+      Punkte: 0
+    </h3>
+
+    <h3 id="mathTime">
+      Zeit: 30
+    </h3>
+  `);
+
+  function next(){
+
+    const a=
+      Math.floor(Math.random()*20)+1;
+
+    const b=
+      Math.floor(Math.random()*20)+1;
+
+    answer=a+b;
+
+    document.getElementById("mathQuestion")
+      .textContent=`${a} + ${b} = ?`;
+
+    document.getElementById("mathInput").value="";
+    document.getElementById("mathInput").focus();
+  }
+
+  window.checkMath=function(){
+
+    const value=
+      Number(document.getElementById("mathInput").value);
+
+    if(value===answer){
+
+      score+=10;
+
+      document.getElementById("mathScore")
+        .textContent="Punkte: "+score;
+
+      next();
+    }
+  };
+
+  next();
+
+  const timer=setInterval(()=>{
+
+    time--;
+
+    if(document.getElementById("mathTime"))
+      document.getElementById("mathTime")
+        .textContent="Zeit: "+time;
+
+    if(time<=0){
+
+      clearInterval(timer);
+
+      saveBest("math",score);
+
+      openGame("🏆 Math Rush",`
+
+        <div class="score">
+          ${score} Punkte
+        </div>
+
+        <button
+          class="bigBtn"
+          onclick="mathRush()">
+          Nochmal
+        </button>
+      `);
+    }
+
+  },1000);
+}
+
+/* ==============================
+   HIGHSCORES
+============================== */
+
+function saveBest(id,score){
+
+  const old=
+    Number(localStorage.getItem("best_"+id)||0);
+
+  if(score>old){
+
+    localStorage.setItem(
+      "best_"+id,
+      score
+    );
+  }
+
   renderGames();
 }
 
-function openGame(title, html) {
+/* ==============================
+   STARTSEITEN-MUSIK
+============================== */
 
-  const screen = document.getElementById("gameScreen");
+let audioCtx=null;
+let musicTimer=null;
+let musicWanted=true;
 
-  screen.style.display = "block";
+function startMusic(){
 
-  screen.innerHTML = `
-    <div class="game-title">
+  if(!musicWanted||musicTimer)return;
 
-      <h1>${title}</h1>
+  if(!audioCtx){
 
-      <button class="back" onclick="closeGame()">
-        ✕ Zurück
-      </button>
+    audioCtx=
+      new(
+        window.AudioContext||
+        window.webkitAudioContext
+      )();
+  }
 
-    </div>
+  if(audioCtx.state==="suspended")
+    audioCtx.resume();
 
-    ${html}
-  `;
-
-  screen.scrollIntoView({
-    behavior: "smooth"
-  });
-}
-
-function closeGame() {
-  document.getElementById("gameScreen").style.display = "none";
-}
-
-function startGame(id) {
-
-  if(id === "cloud") cloudMatch();
-
-  if(id === "cartoon") cartoonColor();
-
-  if(id === "flags") flagMatch();
-
-  if(id === "target") targetRush();
-
-  if(id === "memory") memoryGame();
-
-  if(id === "math") mathRush();
-
-  if(id === "snake") snakeGame();
-}
-
-
-/* =========================
-   CLOUD MATCH
-========================= */
-
-function cloudMatch() {
-
-  let round = 0;
-  let score = 0;
-
-  const colors = [
-    ["#ffffff","#66aaff","#8b5cf6"],
-    ["#d5d5d5","#2474d8","#ff8b35"],
-    ["#ffffff","#35b6e9","#e94c78"],
-    ["#eeeeee","#5d65d9","#42b883"],
-    ["#cccccc","#377dff","#ffbf00"]
+  const notes=[
+    261.63,
+    329.63,
+    392,
+    493.88,
+    392,
+    329.63
   ];
 
-  openGame(
-    "☁️ Cloud Match",
-    `
-      <p>
-        Passe die drei Farben möglichst genau an die Ziel-Farben an.
-      </p>
+  let i=0;
 
-      <div class="stats">
-        <div class="stat">
-          Runde: <b id="round">1</b>/5
-        </div>
+  function note(){
 
-        <div class="stat">
-          Punkte: <b id="score">0</b>
-        </div>
+    if(!musicWanted)return;
 
-        <div class="stat">
-          🏆 Best: ${getBest("cloud")}
-        </div>
-      </div>
+    const osc=
+      audioCtx.createOscillator();
 
-      <div class="color-area">
+    const gain=
+      audioCtx.createGain();
 
-        <div class="color-preview">
-          ☁️
-        </div>
+    osc.type="sine";
 
-        <div>
-          <b>Ziel-Farben:</b>
-        </div>
+    osc.frequency.value=
+      notes[i%notes.length];
 
-        <div class="color-targets">
-          <div id="target1" class="color-target"></div>
-          <div id="target2" class="color-target"></div>
-          <div id="target3" class="color-target"></div>
-        </div>
-
-        <div class="color-controls">
-
-          <label>
-            Farbe 1
-            <input id="color1" type="color">
-          </label>
-
-          <label>
-            Farbe 2
-            <input id="color2" type="color">
-          </label>
-
-          <label>
-            Farbe 3
-            <input id="color3" type="color">
-          </label>
-
-        </div>
-
-        <button class="action" onclick="checkCloud()">
-          🎯 PRÜFEN
-        </button>
-
-        <div id="cloudResult" class="result"></div>
-
-      </div>
-    `
-  );
-
-  window.cloudRound = function() {
-
-    const target = colors[round];
-
-    document.getElementById("target1").style.background = target[0];
-    document.getElementById("target2").style.background = target[1];
-    document.getElementById("target3").style.background = target[2];
-
-    document.getElementById("color1").value = "#ffffff";
-    document.getElementById("color2").value = "#000000";
-    document.getElementById("color3").value = "#888888";
-
-    document.getElementById("round").textContent = round + 1;
-  };
-
-  window.checkCloud = function() {
-
-    const inputs = [
-      document.getElementById("color1").value,
-      document.getElementById("color2").value,
-      document.getElementById("color3").value
-    ];
-
-    const target = colors[round];
-
-    let totalDifference = 0;
-
-    for(let i = 0; i < 3; i++) {
-
-      const a = hexToRgb(inputs[i]);
-      const b = hexToRgb(target[i]);
-
-      totalDifference +=
-        Math.abs(a.r-b.r) +
-        Math.abs(a.g-b.g) +
-        Math.abs(a.b-b.b);
-    }
-
-    const points =
-      Math.max(
-        0,
-        Math.round(100 - totalDifference / 7.65)
-      );
-
-    score += points;
-
-    document.getElementById("score").textContent = score;
-
-    document.getElementById("cloudResult").textContent =
-      "+" + points + " Punkte!";
-
-    round++;
-
-    if(round >= 5) {
-
-      saveBest("cloud", score);
-
-      document.getElementById("cloudResult").textContent =
-        "🏆 FERTIG! " + score + "/500 Punkte";
-
-      return;
-    }
-
-    setTimeout(cloudRound, 600);
-  };
-
-  cloudRound();
-}
-
-
-/* =========================
-   CARTOON COLOR
-========================= */
-
-function cartoonColor() {
-
-  let round = 0;
-  let score = 0;
-
-  const palettes = [
-
-    ["#f2bd8b","#422719","#4d70ff"],
-
-    ["#9b603d","#e8d5a5","#e85075"],
-
-    ["#f1c6a0","#181818","#42a5f5"],
-
-    ["#b87650","#351c12","#4caf75"],
-
-    ["#f5d0ae","#743f21","#ef5350"]
-
-  ];
-
-  openGame(
-    "🎨 Cartoon Color",
-    `
-      <div class="stats">
-        <div class="stat">
-          Runde: <b id="cartoonRound">1</b>/5
-        </div>
-
-        <div class="stat">
-          Punkte: <b id="cartoonScore">0</b>
-        </div>
-      </div>
-
-      <div class="color-area">
-
-        <div class="color-preview">
-          🧑‍🎨
-        </div>
-
-        <p>
-          Passe Haut, Haare und Kleidung an die Ziel-Farben an.
-        </p>
-
-        <div class="color-targets">
-          <div id="ct1" class="color-target"></div>
-          <div id="ct2" class="color-target"></div>
-          <div id="ct3" class="color-target"></div>
-        </div>
-
-        <div class="color-controls">
-
-          <label>
-            Haut
-            <input id="cc1" type="color">
-          </label>
-
-          <label>
-            Haare
-            <input id="cc2" type="color">
-          </label>
-
-          <label>
-            Kleidung
-            <input id="cc3" type="color">
-          </label>
-
-        </div>
-
-        <button class="action" onclick="checkCartoon()">
-          🎯 PRÜFEN
-        </button>
-
-        <div id="cartoonResult" class="result"></div>
-
-      </div>
-    `
-  );
-
-  function setup() {
-
-    const p = palettes[round];
-
-    document.getElementById("ct1").style.background = p[0];
-    document.getElementById("ct2").style.background = p[1];
-    document.getElementById("ct3").style.background = p[2];
-
-    document.getElementById("cc1").value = "#ffffff";
-    document.getElementById("cc2").value = "#000000";
-    document.getElementById("cc3").value = "#888888";
-
-    document.getElementById("cartoonRound").textContent =
-      round + 1;
-  }
-
-  window.checkCartoon = function() {
-
-    const chosen = [
-      document.getElementById("cc1").value,
-      document.getElementById("cc2").value,
-      document.getElementById("cc3").value
-    ];
-
-    const target = palettes[round];
-
-    let difference = 0;
-
-    for(let i=0;i<3;i++) {
-
-      const a = hexToRgb(chosen[i]);
-      const b = hexToRgb(target[i]);
-
-      difference +=
-        Math.abs(a.r-b.r) +
-        Math.abs(a.g-b.g) +
-        Math.abs(a.b-b.b);
-    }
-
-    const points =
-      Math.max(
-        0,
-        Math.round(100-difference/7.65)
-      );
-
-    score += points;
-
-    document.getElementById("cartoonScore").textContent =
-      score;
-
-    document.getElementById("cartoonResult").textContent =
-      "+" + points + " Punkte!";
-
-    round++;
-
-    if(round >= 5) {
-
-      saveBest("cartoon", score);
-
-      document.getElementById("cartoonResult").textContent =
-        "🏆 Fertig! " + score + "/500";
-
-      return;
-    }
-
-    setTimeout(setup,600);
-  };
-
-  setup();
-}
-
-
-/* =========================
-   FLAG MATCH
-========================= */
-
-function flagMatch() {
-
-  const flags = [
-
-    {
-      emoji:"🇩🇪",
-      colors:["#222","#dd3333","#ffcc33"]
-    },
-
-    {
-      emoji:"🇫🇷",
-      colors:["#3155c8","#ffffff","#e44"]
-    },
-
-    {
-      emoji:"🇮🇹",
-      colors:["#159447","#ffffff","#e53935"]
-    },
-
-    {
-      emoji:"🇧🇪",
-      colors:["#222","#f2d22e","#e22"]
-    },
-
-    {
-      emoji:"🇷🇴",
-      colors:["#3155c8","#f2d22e","#e44"]
-    }
-
-  ];
-
-  let round = 0;
-  let score = 0;
-
-  function next() {
-
-    const target = flags[round];
-
-    let options = [
-      target,
-      flags[(round+1)%flags.length],
-      flags[(round+2)%flags.length]
-    ];
-
-    options = options.sort(() => Math.random()-0.5);
-
-    openGame(
-      "🚩 Flag Match",
-      `
-        <div class="stats">
-
-          <div class="stat">
-            Runde ${round+1}/5
-          </div>
-
-          <div class="stat">
-            Punkte ${score}
-          </div>
-
-        </div>
-
-        <div class="flag-question">
-          ${target.emoji}
-        </div>
-
-        <p style="text-align:center">
-          Welche Farbkombination gehört zu dieser Flagge?
-        </p>
-
-        <div class="flag-options">
-
-          ${options.map((flag,index)=>`
-
-            <button
-              class="flag-option"
-              style="
-                background:
-                linear-gradient(
-                  90deg,
-                  ${flag.colors[0]} 0 33%,
-                  ${flag.colors[1]} 33% 66%,
-                  ${flag.colors[2]} 66%
-                )
-              "
-              onclick="chooseFlag(${index})"
-            ></button>
-
-          `).join("")}
-
-        </div>
-      `
+    gain.gain.setValueAtTime(
+      .015,
+      audioCtx.currentTime
     );
 
-    window.chooseFlag = function(index) {
-
-      if(options[index] === target) {
-        score += 100;
-      }
-
-      round++;
-
-      if(round >= 5) {
-
-        saveBest("flags",score);
-
-        openGame(
-          "🚩 Flag Match",
-          `
-            <div class="result">
-              🏆 Fertig! ${score}/500
-            </div>
-
-            <button
-              class="action"
-              onclick="startGame('flags')"
-            >
-              🔄 Nochmal
-            </button>
-          `
-        );
-
-      } else {
-
-        next();
-
-      }
-    };
-  }
-
-  next();
-}
-
-
-/* =========================
-   TARGET RUSH
-========================= */
-
-function targetRush() {
-
-  let score = 0;
-  let time = 20;
-  let running = false;
-  let timer;
-
-  openGame(
-    "🎯 Target Rush",
-    `
-      <div class="stats">
-
-        <div class="stat">
-          Zeit: <b id="time">20</b>
-        </div>
-
-        <div class="stat">
-          Treffer: <b id="targetScore">0</b>
-        </div>
-
-      </div>
-
-      <div id="arena" class="arena"></div>
-
-      <button class="action" onclick="startTarget()">
-        ▶ START
-      </button>
-    `
-  );
-
-  window.startTarget = function() {
-
-    if(running) return;
-
-    running = true;
-    score = 0;
-    time = 20;
-
-    spawnTarget();
-
-    timer = setInterval(() => {
-
-      time--;
-
-      document.getElementById("time").textContent =
-        time;
-
-      if(time <= 0) {
-
-        clearInterval(timer);
-
-        running = false;
-
-        saveBest("target",score);
-
-        document.getElementById("arena").innerHTML =
-          `
-            <div class="result" style="padding:100px 10px">
-              🏁 Fertig! ${score} Treffer
-            </div>
-          `;
-      }
-
-    },1000);
-  };
-
-  function spawnTarget() {
-
-    if(!running) return;
-
-    const arena =
-      document.getElementById("arena");
-
-    arena.innerHTML = "";
-
-    const target =
-      document.createElement("button");
-
-    target.className = "target";
-
-    target.style.left =
-      Math.random() *
-      Math.max(1,arena.clientWidth-65)
-      + "px";
-
-    target.style.top =
-      Math.random() *
-      Math.max(1,arena.clientHeight-65)
-      + "px";
-
-    target.onclick = () => {
-
-      score++;
-
-      document.getElementById("targetScore")
-        .textContent = score;
-
-      spawnTarget();
-    };
-
-    arena.appendChild(target);
-  }
-}
-
-
-/* =========================
-   MEMORY
-========================= */
-
-function memoryGame() {
-
-  const symbols = [
-    "🚀","🎮","🐸",
-    "⭐","⚡","🍕"
-  ];
-
-  let deck =
-    [...symbols,...symbols]
-    .sort(() => Math.random()-0.5);
-
-  let opened = [];
-  let found = 0;
-
-  openGame(
-    "🧠 Memory Mix",
-    `
-      <p style="text-align:center">
-        Finde alle Paare.
-      </p>
-
-      <div id="memory" class="memory"></div>
-
-      <div id="memoryResult" class="result"></div>
-    `
-  );
-
-  const memory =
-    document.getElementById("memory");
-
-  deck.forEach(symbol => {
-
-    const button =
-      document.createElement("button");
-
-    button.textContent = "❔";
-
-    button.onclick = () => {
-
-      if(button.textContent !== "❔")
-        return;
-
-      if(opened.length >= 2)
-        return;
-
-      button.textContent = symbol;
-
-      opened.push({
-        button,
-        symbol
-      });
-
-      if(opened.length === 2) {
-
-        if(
-          opened[0].symbol ===
-          opened[1].symbol
-        ) {
-
-          found++;
-
-          opened = [];
-
-          if(found === symbols.length) {
-
-            saveBest("memory",1000);
-
-            document.getElementById(
-              "memoryResult"
-            ).textContent =
-              "🏆 Geschafft!";
-
-          }
-
-        } else {
-
-          setTimeout(() => {
-
-            opened.forEach(item => {
-              item.button.textContent = "❔";
-            });
-
-            opened = [];
-
-          },600);
-        }
-      }
-    };
-
-    memory.appendChild(button);
-  });
-}
-
-
-/* =========================
-   MATH
-========================= */
-
-function mathRush() {
-
-  let score = 0;
-  let answer = 0;
-
-  openGame(
-    "➗ Math Rush",
-    `
-      <div class="math-box">
-
-        <div id="question" class="math-question">
-        </div>
-
-        <input
-          id="mathAnswer"
-          class="math-input"
-          type="number"
-          placeholder="Antwort"
-        >
-
-        <br><br>
-
-        <button
-          class="action"
-          onclick="checkMath()"
-        >
-          Prüfen
-        </button>
-
-        <div class="result">
-          Punkte:
-          <span id="mathScore">0</span>
-        </div>
-
-      </div>
-    `
-  );
-
-  function newQuestion() {
-
-    const a =
-      Math.floor(Math.random()*20)+1;
-
-    const b =
-      Math.floor(Math.random()*20)+1;
-
-    const addition =
-      Math.random() > 0.5;
-
-    if(addition) {
-
-      answer = a+b;
-
-      document.getElementById("question")
-        .textContent =
-        `${a} + ${b} = ?`;
-
-    } else {
-
-      answer = a-b;
-
-      document.getElementById("question")
-        .textContent =
-        `${a} - ${b} = ?`;
-    }
-
-    document.getElementById(
-      "mathAnswer"
-    ).value = "";
-
-    document.getElementById(
-      "mathAnswer"
-    ).focus();
-  }
-
-  window.checkMath = function() {
-
-    const input =
-      Number(
-        document.getElementById(
-          "mathAnswer"
-        ).value
-      );
-
-    if(input === answer) {
-
-      score += 10;
-
-      document.getElementById(
-        "mathScore"
-      ).textContent = score;
-
-      saveBest("math",score);
-    }
-
-    newQuestion();
-  };
-
-  newQuestion();
-}
-
-
-/* =========================
-   SNAKE
-========================= */
-
-function snakeGame() {
-
-  openGame(
-    "🐍 Snake Zone",
-    `
-      <p style="text-align:center">
-        PC: Pfeiltasten · Handy: Steuerkreuz
-      </p>
-
-      <canvas
-        id="snakeCanvas"
-        width="360"
-        height="360"
-      ></canvas>
-
-      <div
-        id="snakeScore"
-        class="result"
-      >
-        Score: 0
-      </div>
-
-      <div style="text-align:center">
-        <button
-          class="action"
-          onclick="startSnake()"
-        >
-          ▶ START
-        </button>
-      </div>
-
-      <div class="controls">
-
-        <span></span>
-
-        <button onclick="changeDirection('up')">
-          ▲
-        </button>
-
-        <span></span>
-
-        <button onclick="changeDirection('left')">
-          ◀
-        </button>
-
-        <button onclick="changeDirection('down')">
-          ▼
-        </button>
-
-        <button onclick="changeDirection('right')">
-          ▶
-        </button>
-
-      </div>
-    `
-  );
-
-  let snake = [];
-  let food = {};
-  let direction = {
-    x:1,
-    y:0
-  };
-
-  let nextDirection = {
-    x:1,
-    y:0
-  };
-
-  let score = 0;
-  let running = false;
-  let timer;
-
-  const canvas =
-    document.getElementById(
-      "snakeCanvas"
+    gain.gain.exponentialRampToValueAtTime(
+      .001,
+      audioCtx.currentTime+.45
     );
 
-  const ctx =
-    canvas.getContext("2d");
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
 
-  window.startSnake = function() {
+    osc.start();
 
-    snake = [
-      {x:9,y:9}
-    ];
+    osc.stop(
+      audioCtx.currentTime+.45
+    );
 
-    food = {
-      x:5,
-      y:5
-    };
-
-    direction = {
-      x:1,
-      y:0
-    };
-
-    nextDirection = {
-      x:1,
-      y:0
-    };
-
-    score = 0;
-    running = true;
-
-    snakeLoop();
-  };
-
-  function snakeLoop() {
-
-    if(!running) return;
-
-    direction = nextDirection;
-
-    const head = {
-      x:
-        snake[0].x +
-        direction.x,
-
-      y:
-        snake[0].y +
-        direction.y
-    };
-
-    if(
-      head.x < 0 ||
-      head.y < 0 ||
-      head.x >= 18 ||
-      head.y >= 18 ||
-      snake.some(
-        part =>
-          part.x === head.x &&
-          part.y === head.y
-      )
-    ) {
-
-      running = false;
-
-      saveBest("snake",score);
-
-      document.getElementById(
-        "snakeScore"
-      ).textContent =
-        "💥 Game Over! Score: " +
-        score;
-
-      return;
-    }
-
-    snake.unshift(head);
-
-    if(
-      head.x === food.x &&
-      head.y === food.y
-    ) {
-
-      score += 10;
-
-      food = {
-        x:
-          Math.floor(
-            Math.random()*18
-          ),
-
-        y:
-          Math.floor(
-            Math.random()*18
-          )
-      };
-
-    } else {
-
-      snake.pop();
-
-    }
-
-    drawSnake();
-
-    document.getElementById(
-      "snakeScore"
-    ).textContent =
-      "Score: " + score;
-
-    timer =
-      setTimeout(
-        snakeLoop,
-        100
-      );
+    i++;
   }
 
-  function drawSnake() {
+  note();
 
-    ctx.clearRect(
-      0,
-      0,
-      canvas.width,
-      canvas.height
-    );
+  musicTimer=
+    setInterval(note,500);
+}
 
-    ctx.fillStyle =
-      "#7c6cff";
+function stopMusic(){
 
-    snake.forEach(part => {
+  if(musicTimer){
 
-      ctx.fillRect(
-        part.x*20+2,
-        part.y*20+2,
-        16,
-        16
-      );
-
-    });
-
-    ctx.fillStyle =
-      "#ff4f81";
-
-    ctx.fillRect(
-      food.x*20+3,
-      food.y*20+3,
-      14,
-      14
-    );
+    clearInterval(musicTimer);
+    musicTimer=null;
   }
-
-  window.changeDirection =
-    function(dir) {
-
-      if(dir === "up" &&
-         direction.y !== 1) {
-
-        nextDirection = {
-          x:0,
-          y:-1
-        };
-      }
-
-      if(dir === "down" &&
-         direction.y !== -1) {
-
-        nextDirection = {
-          x:0,
-          y:1
-        };
-      }
-
-      if(dir === "left" &&
-         direction.x !== 1) {
-
-        nextDirection = {
-          x:-1,
-          y:0
-        };
-      }
-
-      if(dir === "right" &&
-         direction.x !== -1) {
-
-        nextDirection = {
-          x:1,
-          y:0
-        };
-      }
-    };
-
-  window.onkeydown = function(e) {
-
-    if(e.key === "ArrowUp")
-      changeDirection("up");
-
-    if(e.key === "ArrowDown")
-      changeDirection("down");
-
-    if(e.key === "ArrowLeft")
-      changeDirection("left");
-
-    if(e.key === "ArrowRight")
-      changeDirection("right");
-  };
 }
 
+function toggleMusic(){
 
-/* =========================
-   HILFSFUNKTIONEN
-========================= */
+  musicWanted=!musicWanted;
 
-function hexToRgb(hex) {
+  document.getElementById("musicButton")
+    .textContent=
+      musicWanted
+      ?"🎵 Musik an"
+      :"🔇 Musik aus";
 
-  return {
-    r: parseInt(hex.substring(1,3),16),
-    g: parseInt(hex.substring(3,5),16),
-    b: parseInt(hex.substring(5,7),16)
-  };
+  if(musicWanted)
+    startMusic();
+  else
+    stopMusic();
 }
 
-function openGame(title,content) {
-
-  const screen =
-    document.getElementById(
-      "gameScreen"
-    );
-
-  screen.style.display = "block";
-
-  screen.innerHTML = `
-    <div class="game-title">
-
-      <h1>${title}</h1>
-
-      <button
-        class="back"
-        onclick="closeGame()"
-      >
-        ✕ Zurück
-      </button>
-
-    </div>
-
-    ${content}
-  `;
-
-  screen.scrollIntoView({
-    behavior:"smooth"
-  });
-}
-
-
-/* START */
+document.addEventListener(
+  "click",
+  ()=>{
+    if(musicWanted&&!musicTimer)
+      startMusic();
+  },
+  {once:true}
+);
 
 renderGames();
 
