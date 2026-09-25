@@ -1,0 +1,1646 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GameHub</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  color: white;
+  background:
+    radial-gradient(circle at top left, #293b9b, transparent 35%),
+    radial-gradient(circle at bottom right, #7b21a8, transparent 35%),
+    #080b18;
+  min-height: 100vh;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.header {
+  padding: 35px 20px;
+  text-align: center;
+}
+
+.logo {
+  font-size: 48px;
+  font-weight: 900;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  color: #b8c1df;
+  font-size: 17px;
+}
+
+.search {
+  width: min(600px, 90%);
+  margin: 25px auto 10px;
+  display: block;
+  padding: 15px 18px;
+  border-radius: 15px;
+  border: 1px solid #35406d;
+  background: #11172b;
+  color: white;
+  outline: none;
+}
+
+.categories {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px 15px 25px;
+}
+
+.categories button,
+.back,
+.action {
+  border: 1px solid #3b4778;
+  background: #151c34;
+  color: white;
+  padding: 11px 16px;
+  border-radius: 12px;
+}
+
+.categories button:hover,
+.back:hover,
+.action:hover {
+  background: #6d5dfc;
+}
+
+.games {
+  width: min(1200px, 94%);
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 18px;
+  padding-bottom: 40px;
+}
+
+.card {
+  background: rgba(18, 25, 49, 0.92);
+  border: 1px solid #303b68;
+  border-radius: 20px;
+  overflow: hidden;
+  transition: 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  border-color: #8175ff;
+}
+
+.card-image {
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #10172d;
+  font-size: 70px;
+}
+
+.card-content {
+  padding: 17px;
+}
+
+.card h2 {
+  margin: 0 0 7px;
+  font-size: 21px;
+}
+
+.card p {
+  margin: 0;
+  color: #aeb8d5;
+  line-height: 1.4;
+}
+
+.play-button {
+  width: 100%;
+  margin-top: 15px;
+  padding: 12px;
+  border: 0;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #6d5dfc, #9b5cff);
+  color: white;
+  font-weight: bold;
+}
+
+#gameScreen {
+  display: none;
+  width: min(900px, 94%);
+  margin: 20px auto 50px;
+  background: rgba(13, 19, 38, 0.96);
+  border: 1px solid #35406d;
+  border-radius: 22px;
+  padding: 20px;
+}
+
+.game-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.game-title h1 {
+  margin: 0;
+}
+
+.stats {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 15px 0;
+}
+
+.stat {
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: #151c34;
+  border: 1px solid #303b68;
+}
+
+.arena {
+  position: relative;
+  height: 350px;
+  background: #0a1020;
+  border: 1px solid #303b68;
+  border-radius: 17px;
+  overflow: hidden;
+}
+
+.target {
+  position: absolute;
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  border: 4px solid white;
+  background: #ff4f81;
+}
+
+.color-area {
+  text-align: center;
+}
+
+.color-preview {
+  font-size: 100px;
+  margin: 20px;
+}
+
+.color-targets {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 15px;
+}
+
+.color-target {
+  width: 80px;
+  height: 60px;
+  border-radius: 14px;
+  border: 2px solid white;
+}
+
+.color-controls {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+}
+
+.color-controls label {
+  background: #151c34;
+  padding: 14px;
+  border-radius: 12px;
+}
+
+.color-controls input {
+  width: 100%;
+  margin-top: 8px;
+}
+
+.result {
+  font-size: 25px;
+  font-weight: bold;
+  margin: 15px 0;
+  text-align: center;
+}
+
+.flag-question {
+  text-align: center;
+  font-size: 80px;
+  margin: 20px;
+}
+
+.flag-options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.flag-option {
+  height: 120px;
+  border-radius: 12px;
+  border: 2px solid #303b68;
+}
+
+.memory {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.memory button {
+  height: 85px;
+  font-size: 30px;
+  border: 1px solid #3b4778;
+  border-radius: 12px;
+  background: #151c34;
+  color: white;
+}
+
+.math-box {
+  text-align: center;
+}
+
+.math-question {
+  font-size: 42px;
+  font-weight: bold;
+  margin: 30px;
+}
+
+.math-input {
+  padding: 14px;
+  width: min(300px, 90%);
+  border-radius: 12px;
+  border: 1px solid #3b4778;
+  background: #10172d;
+  color: white;
+  text-align: center;
+  font-size: 20px;
+}
+
+canvas {
+  display: block;
+  width: min(400px, 100%);
+  height: auto;
+  margin: auto;
+  background: #070c18;
+  border-radius: 15px;
+  border: 1px solid #303b68;
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: repeat(3, 55px);
+  justify-content: center;
+  gap: 6px;
+  margin-top: 15px;
+}
+
+.controls button {
+  height: 50px;
+  border-radius: 10px;
+  border: 1px solid #3b4778;
+  background: #151c34;
+  color: white;
+}
+
+@media(max-width:600px) {
+  .logo {
+    font-size: 36px;
+  }
+
+  .color-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .flag-options {
+    grid-template-columns: 1fr;
+  }
+
+  .memory {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .arena {
+    height: 300px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+  <div class="logo">🎮 GAMEHUB</div>
+  <div class="subtitle">
+    Spiele • Punkte sammeln • Highscores knacken
+  </div>
+
+  <input
+    id="search"
+    class="search"
+    type="text"
+    placeholder="🔎 Spiel suchen..."
+  >
+</header>
+
+<div class="categories">
+  <button onclick="filterGames('all')">Alle</button>
+  <button onclick="filterGames('skill')">🎯 Skill</button>
+  <button onclick="filterGames('puzzle')">🧠 Puzzle</button>
+  <button onclick="filterGames('arcade')">🕹️ Arcade</button>
+</div>
+
+<main id="games" class="games"></main>
+
+<section id="gameScreen"></section>
+
+<script>
+
+const games = [
+  {
+    id: "cloud",
+    name: "Cloud Match",
+    description: "Passe die Farben von Wolken, Cartoons und mehr an.",
+    category: "skill",
+    image: "☁️"
+  },
+  {
+    id: "cartoon",
+    name: "Cartoon Color",
+    description: "Passe die Farben eines Cartoon-Charakters an.",
+    category: "skill",
+    image: "🎨"
+  },
+  {
+    id: "flags",
+    name: "Flag Match",
+    description: "Finde die richtige Farbkombination zur Flagge.",
+    category: "puzzle",
+    image: "🚩"
+  },
+  {
+    id: "target",
+    name: "Target Rush",
+    description: "Klicke so viele Ziele wie möglich.",
+    category: "skill",
+    image: "🎯"
+  },
+  {
+    id: "memory",
+    name: "Memory Mix",
+    description: "Finde alle passenden Paare.",
+    category: "puzzle",
+    image: "🧠"
+  },
+  {
+    id: "math",
+    name: "Math Rush",
+    description: "Löse Matheaufgaben möglichst schnell.",
+    category: "puzzle",
+    image: "➗"
+  },
+  {
+    id: "snake",
+    name: "Snake Zone",
+    description: "Sammle Punkte und werde immer länger.",
+    category: "arcade",
+    image: "🐍"
+  }
+];
+
+let currentCategory = "all";
+
+function getBest(id) {
+  return Number(localStorage.getItem("best_" + id) || 0);
+}
+
+function saveBest(id, score) {
+  if(score > getBest(id)) {
+    localStorage.setItem("best_" + id, score);
+  }
+}
+
+function renderGames() {
+
+  const container = document.getElementById("games");
+  const search = document
+    .getElementById("search")
+    .value
+    .toLowerCase();
+
+  container.innerHTML = "";
+
+  games
+    .filter(game => {
+      const categoryOK =
+        currentCategory === "all" ||
+        game.category === currentCategory;
+
+      const searchOK =
+        game.name.toLowerCase().includes(search) ||
+        game.description.toLowerCase().includes(search);
+
+      return categoryOK && searchOK;
+    })
+    .forEach(game => {
+
+      const card = document.createElement("div");
+      card.className = "card";
+
+      card.innerHTML = `
+        <div class="card-image">
+          ${game.image}
+        </div>
+
+        <div class="card-content">
+
+          <h2>${game.name}</h2>
+
+          <p>${game.description}</p>
+
+          <p style="margin-top:10px">
+            🏆 Best: ${getBest(game.id)}
+          </p>
+
+          <button
+            class="play-button"
+            onclick="startGame('${game.id}')"
+          >
+            ▶ SPIELEN
+          </button>
+
+        </div>
+      `;
+
+      container.appendChild(card);
+    });
+}
+
+document
+  .getElementById("search")
+  .addEventListener("input", renderGames);
+
+function filterGames(category) {
+  currentCategory = category;
+  renderGames();
+}
+
+function openGame(title, html) {
+
+  const screen = document.getElementById("gameScreen");
+
+  screen.style.display = "block";
+
+  screen.innerHTML = `
+    <div class="game-title">
+
+      <h1>${title}</h1>
+
+      <button class="back" onclick="closeGame()">
+        ✕ Zurück
+      </button>
+
+    </div>
+
+    ${html}
+  `;
+
+  screen.scrollIntoView({
+    behavior: "smooth"
+  });
+}
+
+function closeGame() {
+  document.getElementById("gameScreen").style.display = "none";
+}
+
+function startGame(id) {
+
+  if(id === "cloud") cloudMatch();
+
+  if(id === "cartoon") cartoonColor();
+
+  if(id === "flags") flagMatch();
+
+  if(id === "target") targetRush();
+
+  if(id === "memory") memoryGame();
+
+  if(id === "math") mathRush();
+
+  if(id === "snake") snakeGame();
+}
+
+
+/* =========================
+   CLOUD MATCH
+========================= */
+
+function cloudMatch() {
+
+  let round = 0;
+  let score = 0;
+
+  const colors = [
+    ["#ffffff","#66aaff","#8b5cf6"],
+    ["#d5d5d5","#2474d8","#ff8b35"],
+    ["#ffffff","#35b6e9","#e94c78"],
+    ["#eeeeee","#5d65d9","#42b883"],
+    ["#cccccc","#377dff","#ffbf00"]
+  ];
+
+  openGame(
+    "☁️ Cloud Match",
+    `
+      <p>
+        Passe die drei Farben möglichst genau an die Ziel-Farben an.
+      </p>
+
+      <div class="stats">
+        <div class="stat">
+          Runde: <b id="round">1</b>/5
+        </div>
+
+        <div class="stat">
+          Punkte: <b id="score">0</b>
+        </div>
+
+        <div class="stat">
+          🏆 Best: ${getBest("cloud")}
+        </div>
+      </div>
+
+      <div class="color-area">
+
+        <div class="color-preview">
+          ☁️
+        </div>
+
+        <div>
+          <b>Ziel-Farben:</b>
+        </div>
+
+        <div class="color-targets">
+          <div id="target1" class="color-target"></div>
+          <div id="target2" class="color-target"></div>
+          <div id="target3" class="color-target"></div>
+        </div>
+
+        <div class="color-controls">
+
+          <label>
+            Farbe 1
+            <input id="color1" type="color">
+          </label>
+
+          <label>
+            Farbe 2
+            <input id="color2" type="color">
+          </label>
+
+          <label>
+            Farbe 3
+            <input id="color3" type="color">
+          </label>
+
+        </div>
+
+        <button class="action" onclick="checkCloud()">
+          🎯 PRÜFEN
+        </button>
+
+        <div id="cloudResult" class="result"></div>
+
+      </div>
+    `
+  );
+
+  window.cloudRound = function() {
+
+    const target = colors[round];
+
+    document.getElementById("target1").style.background = target[0];
+    document.getElementById("target2").style.background = target[1];
+    document.getElementById("target3").style.background = target[2];
+
+    document.getElementById("color1").value = "#ffffff";
+    document.getElementById("color2").value = "#000000";
+    document.getElementById("color3").value = "#888888";
+
+    document.getElementById("round").textContent = round + 1;
+  };
+
+  window.checkCloud = function() {
+
+    const inputs = [
+      document.getElementById("color1").value,
+      document.getElementById("color2").value,
+      document.getElementById("color3").value
+    ];
+
+    const target = colors[round];
+
+    let totalDifference = 0;
+
+    for(let i = 0; i < 3; i++) {
+
+      const a = hexToRgb(inputs[i]);
+      const b = hexToRgb(target[i]);
+
+      totalDifference +=
+        Math.abs(a.r-b.r) +
+        Math.abs(a.g-b.g) +
+        Math.abs(a.b-b.b);
+    }
+
+    const points =
+      Math.max(
+        0,
+        Math.round(100 - totalDifference / 7.65)
+      );
+
+    score += points;
+
+    document.getElementById("score").textContent = score;
+
+    document.getElementById("cloudResult").textContent =
+      "+" + points + " Punkte!";
+
+    round++;
+
+    if(round >= 5) {
+
+      saveBest("cloud", score);
+
+      document.getElementById("cloudResult").textContent =
+        "🏆 FERTIG! " + score + "/500 Punkte";
+
+      return;
+    }
+
+    setTimeout(cloudRound, 600);
+  };
+
+  cloudRound();
+}
+
+
+/* =========================
+   CARTOON COLOR
+========================= */
+
+function cartoonColor() {
+
+  let round = 0;
+  let score = 0;
+
+  const palettes = [
+
+    ["#f2bd8b","#422719","#4d70ff"],
+
+    ["#9b603d","#e8d5a5","#e85075"],
+
+    ["#f1c6a0","#181818","#42a5f5"],
+
+    ["#b87650","#351c12","#4caf75"],
+
+    ["#f5d0ae","#743f21","#ef5350"]
+
+  ];
+
+  openGame(
+    "🎨 Cartoon Color",
+    `
+      <div class="stats">
+        <div class="stat">
+          Runde: <b id="cartoonRound">1</b>/5
+        </div>
+
+        <div class="stat">
+          Punkte: <b id="cartoonScore">0</b>
+        </div>
+      </div>
+
+      <div class="color-area">
+
+        <div class="color-preview">
+          🧑‍🎨
+        </div>
+
+        <p>
+          Passe Haut, Haare und Kleidung an die Ziel-Farben an.
+        </p>
+
+        <div class="color-targets">
+          <div id="ct1" class="color-target"></div>
+          <div id="ct2" class="color-target"></div>
+          <div id="ct3" class="color-target"></div>
+        </div>
+
+        <div class="color-controls">
+
+          <label>
+            Haut
+            <input id="cc1" type="color">
+          </label>
+
+          <label>
+            Haare
+            <input id="cc2" type="color">
+          </label>
+
+          <label>
+            Kleidung
+            <input id="cc3" type="color">
+          </label>
+
+        </div>
+
+        <button class="action" onclick="checkCartoon()">
+          🎯 PRÜFEN
+        </button>
+
+        <div id="cartoonResult" class="result"></div>
+
+      </div>
+    `
+  );
+
+  function setup() {
+
+    const p = palettes[round];
+
+    document.getElementById("ct1").style.background = p[0];
+    document.getElementById("ct2").style.background = p[1];
+    document.getElementById("ct3").style.background = p[2];
+
+    document.getElementById("cc1").value = "#ffffff";
+    document.getElementById("cc2").value = "#000000";
+    document.getElementById("cc3").value = "#888888";
+
+    document.getElementById("cartoonRound").textContent =
+      round + 1;
+  }
+
+  window.checkCartoon = function() {
+
+    const chosen = [
+      document.getElementById("cc1").value,
+      document.getElementById("cc2").value,
+      document.getElementById("cc3").value
+    ];
+
+    const target = palettes[round];
+
+    let difference = 0;
+
+    for(let i=0;i<3;i++) {
+
+      const a = hexToRgb(chosen[i]);
+      const b = hexToRgb(target[i]);
+
+      difference +=
+        Math.abs(a.r-b.r) +
+        Math.abs(a.g-b.g) +
+        Math.abs(a.b-b.b);
+    }
+
+    const points =
+      Math.max(
+        0,
+        Math.round(100-difference/7.65)
+      );
+
+    score += points;
+
+    document.getElementById("cartoonScore").textContent =
+      score;
+
+    document.getElementById("cartoonResult").textContent =
+      "+" + points + " Punkte!";
+
+    round++;
+
+    if(round >= 5) {
+
+      saveBest("cartoon", score);
+
+      document.getElementById("cartoonResult").textContent =
+        "🏆 Fertig! " + score + "/500";
+
+      return;
+    }
+
+    setTimeout(setup,600);
+  };
+
+  setup();
+}
+
+
+/* =========================
+   FLAG MATCH
+========================= */
+
+function flagMatch() {
+
+  const flags = [
+
+    {
+      emoji:"🇩🇪",
+      colors:["#222","#dd3333","#ffcc33"]
+    },
+
+    {
+      emoji:"🇫🇷",
+      colors:["#3155c8","#ffffff","#e44"]
+    },
+
+    {
+      emoji:"🇮🇹",
+      colors:["#159447","#ffffff","#e53935"]
+    },
+
+    {
+      emoji:"🇧🇪",
+      colors:["#222","#f2d22e","#e22"]
+    },
+
+    {
+      emoji:"🇷🇴",
+      colors:["#3155c8","#f2d22e","#e44"]
+    }
+
+  ];
+
+  let round = 0;
+  let score = 0;
+
+  function next() {
+
+    const target = flags[round];
+
+    let options = [
+      target,
+      flags[(round+1)%flags.length],
+      flags[(round+2)%flags.length]
+    ];
+
+    options = options.sort(() => Math.random()-0.5);
+
+    openGame(
+      "🚩 Flag Match",
+      `
+        <div class="stats">
+
+          <div class="stat">
+            Runde ${round+1}/5
+          </div>
+
+          <div class="stat">
+            Punkte ${score}
+          </div>
+
+        </div>
+
+        <div class="flag-question">
+          ${target.emoji}
+        </div>
+
+        <p style="text-align:center">
+          Welche Farbkombination gehört zu dieser Flagge?
+        </p>
+
+        <div class="flag-options">
+
+          ${options.map((flag,index)=>`
+
+            <button
+              class="flag-option"
+              style="
+                background:
+                linear-gradient(
+                  90deg,
+                  ${flag.colors[0]} 0 33%,
+                  ${flag.colors[1]} 33% 66%,
+                  ${flag.colors[2]} 66%
+                )
+              "
+              onclick="chooseFlag(${index})"
+            ></button>
+
+          `).join("")}
+
+        </div>
+      `
+    );
+
+    window.chooseFlag = function(index) {
+
+      if(options[index] === target) {
+        score += 100;
+      }
+
+      round++;
+
+      if(round >= 5) {
+
+        saveBest("flags",score);
+
+        openGame(
+          "🚩 Flag Match",
+          `
+            <div class="result">
+              🏆 Fertig! ${score}/500
+            </div>
+
+            <button
+              class="action"
+              onclick="startGame('flags')"
+            >
+              🔄 Nochmal
+            </button>
+          `
+        );
+
+      } else {
+
+        next();
+
+      }
+    };
+  }
+
+  next();
+}
+
+
+/* =========================
+   TARGET RUSH
+========================= */
+
+function targetRush() {
+
+  let score = 0;
+  let time = 20;
+  let running = false;
+  let timer;
+
+  openGame(
+    "🎯 Target Rush",
+    `
+      <div class="stats">
+
+        <div class="stat">
+          Zeit: <b id="time">20</b>
+        </div>
+
+        <div class="stat">
+          Treffer: <b id="targetScore">0</b>
+        </div>
+
+      </div>
+
+      <div id="arena" class="arena"></div>
+
+      <button class="action" onclick="startTarget()">
+        ▶ START
+      </button>
+    `
+  );
+
+  window.startTarget = function() {
+
+    if(running) return;
+
+    running = true;
+    score = 0;
+    time = 20;
+
+    spawnTarget();
+
+    timer = setInterval(() => {
+
+      time--;
+
+      document.getElementById("time").textContent =
+        time;
+
+      if(time <= 0) {
+
+        clearInterval(timer);
+
+        running = false;
+
+        saveBest("target",score);
+
+        document.getElementById("arena").innerHTML =
+          `
+            <div class="result" style="padding:100px 10px">
+              🏁 Fertig! ${score} Treffer
+            </div>
+          `;
+      }
+
+    },1000);
+  };
+
+  function spawnTarget() {
+
+    if(!running) return;
+
+    const arena =
+      document.getElementById("arena");
+
+    arena.innerHTML = "";
+
+    const target =
+      document.createElement("button");
+
+    target.className = "target";
+
+    target.style.left =
+      Math.random() *
+      Math.max(1,arena.clientWidth-65)
+      + "px";
+
+    target.style.top =
+      Math.random() *
+      Math.max(1,arena.clientHeight-65)
+      + "px";
+
+    target.onclick = () => {
+
+      score++;
+
+      document.getElementById("targetScore")
+        .textContent = score;
+
+      spawnTarget();
+    };
+
+    arena.appendChild(target);
+  }
+}
+
+
+/* =========================
+   MEMORY
+========================= */
+
+function memoryGame() {
+
+  const symbols = [
+    "🚀","🎮","🐸",
+    "⭐","⚡","🍕"
+  ];
+
+  let deck =
+    [...symbols,...symbols]
+    .sort(() => Math.random()-0.5);
+
+  let opened = [];
+  let found = 0;
+
+  openGame(
+    "🧠 Memory Mix",
+    `
+      <p style="text-align:center">
+        Finde alle Paare.
+      </p>
+
+      <div id="memory" class="memory"></div>
+
+      <div id="memoryResult" class="result"></div>
+    `
+  );
+
+  const memory =
+    document.getElementById("memory");
+
+  deck.forEach(symbol => {
+
+    const button =
+      document.createElement("button");
+
+    button.textContent = "❔";
+
+    button.onclick = () => {
+
+      if(button.textContent !== "❔")
+        return;
+
+      if(opened.length >= 2)
+        return;
+
+      button.textContent = symbol;
+
+      opened.push({
+        button,
+        symbol
+      });
+
+      if(opened.length === 2) {
+
+        if(
+          opened[0].symbol ===
+          opened[1].symbol
+        ) {
+
+          found++;
+
+          opened = [];
+
+          if(found === symbols.length) {
+
+            saveBest("memory",1000);
+
+            document.getElementById(
+              "memoryResult"
+            ).textContent =
+              "🏆 Geschafft!";
+
+          }
+
+        } else {
+
+          setTimeout(() => {
+
+            opened.forEach(item => {
+              item.button.textContent = "❔";
+            });
+
+            opened = [];
+
+          },600);
+        }
+      }
+    };
+
+    memory.appendChild(button);
+  });
+}
+
+
+/* =========================
+   MATH
+========================= */
+
+function mathRush() {
+
+  let score = 0;
+  let answer = 0;
+
+  openGame(
+    "➗ Math Rush",
+    `
+      <div class="math-box">
+
+        <div id="question" class="math-question">
+        </div>
+
+        <input
+          id="mathAnswer"
+          class="math-input"
+          type="number"
+          placeholder="Antwort"
+        >
+
+        <br><br>
+
+        <button
+          class="action"
+          onclick="checkMath()"
+        >
+          Prüfen
+        </button>
+
+        <div class="result">
+          Punkte:
+          <span id="mathScore">0</span>
+        </div>
+
+      </div>
+    `
+  );
+
+  function newQuestion() {
+
+    const a =
+      Math.floor(Math.random()*20)+1;
+
+    const b =
+      Math.floor(Math.random()*20)+1;
+
+    const addition =
+      Math.random() > 0.5;
+
+    if(addition) {
+
+      answer = a+b;
+
+      document.getElementById("question")
+        .textContent =
+        `${a} + ${b} = ?`;
+
+    } else {
+
+      answer = a-b;
+
+      document.getElementById("question")
+        .textContent =
+        `${a} - ${b} = ?`;
+    }
+
+    document.getElementById(
+      "mathAnswer"
+    ).value = "";
+
+    document.getElementById(
+      "mathAnswer"
+    ).focus();
+  }
+
+  window.checkMath = function() {
+
+    const input =
+      Number(
+        document.getElementById(
+          "mathAnswer"
+        ).value
+      );
+
+    if(input === answer) {
+
+      score += 10;
+
+      document.getElementById(
+        "mathScore"
+      ).textContent = score;
+
+      saveBest("math",score);
+    }
+
+    newQuestion();
+  };
+
+  newQuestion();
+}
+
+
+/* =========================
+   SNAKE
+========================= */
+
+function snakeGame() {
+
+  openGame(
+    "🐍 Snake Zone",
+    `
+      <p style="text-align:center">
+        PC: Pfeiltasten · Handy: Steuerkreuz
+      </p>
+
+      <canvas
+        id="snakeCanvas"
+        width="360"
+        height="360"
+      ></canvas>
+
+      <div
+        id="snakeScore"
+        class="result"
+      >
+        Score: 0
+      </div>
+
+      <div style="text-align:center">
+        <button
+          class="action"
+          onclick="startSnake()"
+        >
+          ▶ START
+        </button>
+      </div>
+
+      <div class="controls">
+
+        <span></span>
+
+        <button onclick="changeDirection('up')">
+          ▲
+        </button>
+
+        <span></span>
+
+        <button onclick="changeDirection('left')">
+          ◀
+        </button>
+
+        <button onclick="changeDirection('down')">
+          ▼
+        </button>
+
+        <button onclick="changeDirection('right')">
+          ▶
+        </button>
+
+      </div>
+    `
+  );
+
+  let snake = [];
+  let food = {};
+  let direction = {
+    x:1,
+    y:0
+  };
+
+  let nextDirection = {
+    x:1,
+    y:0
+  };
+
+  let score = 0;
+  let running = false;
+  let timer;
+
+  const canvas =
+    document.getElementById(
+      "snakeCanvas"
+    );
+
+  const ctx =
+    canvas.getContext("2d");
+
+  window.startSnake = function() {
+
+    snake = [
+      {x:9,y:9}
+    ];
+
+    food = {
+      x:5,
+      y:5
+    };
+
+    direction = {
+      x:1,
+      y:0
+    };
+
+    nextDirection = {
+      x:1,
+      y:0
+    };
+
+    score = 0;
+    running = true;
+
+    snakeLoop();
+  };
+
+  function snakeLoop() {
+
+    if(!running) return;
+
+    direction = nextDirection;
+
+    const head = {
+      x:
+        snake[0].x +
+        direction.x,
+
+      y:
+        snake[0].y +
+        direction.y
+    };
+
+    if(
+      head.x < 0 ||
+      head.y < 0 ||
+      head.x >= 18 ||
+      head.y >= 18 ||
+      snake.some(
+        part =>
+          part.x === head.x &&
+          part.y === head.y
+      )
+    ) {
+
+      running = false;
+
+      saveBest("snake",score);
+
+      document.getElementById(
+        "snakeScore"
+      ).textContent =
+        "💥 Game Over! Score: " +
+        score;
+
+      return;
+    }
+
+    snake.unshift(head);
+
+    if(
+      head.x === food.x &&
+      head.y === food.y
+    ) {
+
+      score += 10;
+
+      food = {
+        x:
+          Math.floor(
+            Math.random()*18
+          ),
+
+        y:
+          Math.floor(
+            Math.random()*18
+          )
+      };
+
+    } else {
+
+      snake.pop();
+
+    }
+
+    drawSnake();
+
+    document.getElementById(
+      "snakeScore"
+    ).textContent =
+      "Score: " + score;
+
+    timer =
+      setTimeout(
+        snakeLoop,
+        100
+      );
+  }
+
+  function drawSnake() {
+
+    ctx.clearRect(
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    );
+
+    ctx.fillStyle =
+      "#7c6cff";
+
+    snake.forEach(part => {
+
+      ctx.fillRect(
+        part.x*20+2,
+        part.y*20+2,
+        16,
+        16
+      );
+
+    });
+
+    ctx.fillStyle =
+      "#ff4f81";
+
+    ctx.fillRect(
+      food.x*20+3,
+      food.y*20+3,
+      14,
+      14
+    );
+  }
+
+  window.changeDirection =
+    function(dir) {
+
+      if(dir === "up" &&
+         direction.y !== 1) {
+
+        nextDirection = {
+          x:0,
+          y:-1
+        };
+      }
+
+      if(dir === "down" &&
+         direction.y !== -1) {
+
+        nextDirection = {
+          x:0,
+          y:1
+        };
+      }
+
+      if(dir === "left" &&
+         direction.x !== 1) {
+
+        nextDirection = {
+          x:-1,
+          y:0
+        };
+      }
+
+      if(dir === "right" &&
+         direction.x !== -1) {
+
+        nextDirection = {
+          x:1,
+          y:0
+        };
+      }
+    };
+
+  window.onkeydown = function(e) {
+
+    if(e.key === "ArrowUp")
+      changeDirection("up");
+
+    if(e.key === "ArrowDown")
+      changeDirection("down");
+
+    if(e.key === "ArrowLeft")
+      changeDirection("left");
+
+    if(e.key === "ArrowRight")
+      changeDirection("right");
+  };
+}
+
+
+/* =========================
+   HILFSFUNKTIONEN
+========================= */
+
+function hexToRgb(hex) {
+
+  return {
+    r: parseInt(hex.substring(1,3),16),
+    g: parseInt(hex.substring(3,5),16),
+    b: parseInt(hex.substring(5,7),16)
+  };
+}
+
+function openGame(title,content) {
+
+  const screen =
+    document.getElementById(
+      "gameScreen"
+    );
+
+  screen.style.display = "block";
+
+  screen.innerHTML = `
+    <div class="game-title">
+
+      <h1>${title}</h1>
+
+      <button
+        class="back"
+        onclick="closeGame()"
+      >
+        ✕ Zurück
+      </button>
+
+    </div>
+
+    ${content}
+  `;
+
+  screen.scrollIntoView({
+    behavior:"smooth"
+  });
+}
+
+
+/* START */
+
+renderGames();
+
+</script>
+
+</body>
+</html>
